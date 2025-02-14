@@ -1,0 +1,106 @@
+.zpc-cta-container {
+    font-family: 'Arial', sans-serif;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 40px; /* Increased padding for a more spacious feel */
+    background: linear-gradient(135deg, #f5f5f5 50%, #ff7f50 50%);
+    border-radius: 15px; /* More rounded corners */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Deeper shadow for a more pronounced effect */
+    position: relative; /* For positioning effects */
+    overflow: hidden; /* To contain pseudo-elements if added */
+}
+
+.zpc-cta-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1); /* Subtle overlay */
+    border-radius: 15px;
+    z-index: 1; /* Behind content */
+}
+
+.zpc-cta-content {
+    position: relative; /* To layer over the before element */
+    z-index: 2; /* Above the overlay */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.zpc-cta-title {
+    font-size: 28px; /* Increased font size */
+    color: #333;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle text shadow */
+}
+
+.zpc-cta-description {
+    font-size: 18px; /* Increased font size */
+    color: #666;
+    margin-bottom: 25px; /* Increased margin */
+}
+
+.zpc-cta-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px; /* Increased gap for better spacing */
+}
+
+.zpc-cta-button {
+    padding: 15px 30px; /* Increased padding */
+    font-size: 18px; /* Increased font size */
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px; /* More rounded buttons */
+    transition: all 0.3s ease;
+    border: 2px solid transparent; /* Initial transparent border */
+    position: relative; /* For positioning hover effects */
+    overflow: hidden; /* To contain pseudo-elements if added */
+}
+
+.zpc-cta-button-past {
+    background-color: #ffa500; /* Left button */
+    color: #fff;
+}
+
+.zpc-cta-button-past:hover {
+    background-color: #ffffff; /* Change background on hover */
+    border-color: #ffa500; /* Outline color */
+    outline: none; /* Remove default outline */
+}
+
+.zpc-cta-button-graphs {
+    background-color: #333; /* Right button */
+    color: #fff;
+}
+
+.zpc-cta-button-graphs:hover {
+    background-color: #555; /* Change background on hover */
+    border-color: #fff; /* Outline color */
+    outline: none; /* Remove default outline */
+}
+
+/* Media queries */
+@media (max-width: 600px) {
+    .zpc-cta-container {
+        padding: 20px; /* Adjusted padding for mobile */
+    }
+
+    .zpc-cta-title {
+        font-size: 24px; /* Adjusted font size */
+    }
+
+    .zpc-cta-description {
+        font-size: 16px; /* Adjusted font size */
+    }
+
+    .zpc-cta-button {
+        padding: 10px 20px; /* Adjusted padding */
+        font-size: 16px; /* Adjusted font size */
+    }
+}

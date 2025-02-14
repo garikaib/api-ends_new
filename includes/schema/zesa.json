@@ -1,0 +1,58 @@
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Electricity",
+    "offers": [
+      {
+        "@type": "Offer",
+        "priceSpecification": {
+          "@type": "CompoundPriceSpecification",
+          "priceComponent": [
+            {
+              "@type": "UnitPriceSpecification",
+              "name": "First 50 Units",
+              "price": "17.21",
+              "priceCurrency": "ZWL",
+              "valueAddedTaxIncluded": true
+            },
+            {
+              "@type": "PriceSpecification",
+              "name": "51-100",
+              "price": "34.50",
+              "priceCurrency": "ZWL",
+              "valueAddedTaxIncluded": true
+            },
+            {
+              "@type": "PriceSpecification",
+              "name": "101-200",
+              "price": "60.44",
+              "priceCurrency": "ZWL",
+              "valueAddedTaxIncluded": true
+            },
+            {
+              "@type": "PriceSpecification",
+              "name": "201-300",
+              "price": "86.29",
+              "priceCurrency": "ZWL",
+              "valueAddedTaxIncluded": true
+            },
+            {
+              "@type": "PriceSpecification",
+              "name": "301-400",
+              "price": "99.17",
+              "priceCurrency": "ZWL",
+              "valueAddedTaxIncluded": true
+            },
+            {
+              "@type": "PriceSpecification",
+              "name": "401 and above",
+              "price": "103.49",
+              "priceCurrency": "ZWL",
+              "valueAddedTaxIncluded": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

@@ -1,0 +1,65 @@
+.zp_order_unsuccessful_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 0;
+}
+
+.zp_order_unsuccessful_tick-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+    background-color: #ff4d4f;
+    border-radius: 50%;
+    margin-bottom: 30px;
+}
+
+.zp_order_unsuccessful_tick-circle i {
+    color: #fff;
+    font-size: 3rem;
+}
+
+.zp_order_unsuccessful_heading {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+}
+
+.zp_order_unsuccessful_text {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #4d4d4d;
+    font-size: 20px;
+}
+
+.zp_order_unsuccessful_button {
+    text-align: center;
+}
+
+.zp_order_unsuccessful_button-link {
+    display: inline-block;
+    padding: 10px 30px;
+    background-color: #ff9c6e;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.zp_order_unsuccessful_button-link:hover {
+    background-color: #ffa981;
+}
+
+.zp_order_unsuccessful_danger {
+    background-color: #ff4d4f;
+    border: 2px solid #fff;
+}
+
+.zp_order_unsuccessful_danger i {
+    font-weight: bold;
+    font-size: 3rem;
+}
