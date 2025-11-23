@@ -117,30 +117,10 @@ require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-rates.php';
  *
  * @return string HTML table of latest fuel prices or error message if unable to retrieve.
  */
-add_shortcode('show-latest-fuel-prices', 'php_show_latest_fuel_prices');
-function php_show_latest_fuel_prices()
-{
-    if (is_singular() && has_shortcode(get_post()->post_content, 'show-latest-fuel-prices')) {
-
-        try {
-            require_once plugin_dir_path(__FILE__) . 'templates/fuel.php';
-            $fuel_prices = new ZIMAPI(ZIMAPI_BASE);
-            $endPoint = "/fuel/";
-            $latest_fuel_prices = $fuel_prices->callApi($endPoint, zp_get_remote_ip());
-            $zim_rates = new ZIMAPI(ZIMAPI_BASE);
-            $end_point = '/rates/fx-rates';
-            $zim_latest_rates = $zim_rates->callApi($end_point, zp_get_remote_ip());
-            return build_fuel_table($latest_fuel_prices, $zim_latest_rates);
-        } catch (Exception $e) {
-            // Log the error
-            error_log('Error retrieving fuel prices: ' . $e->getMessage());
-            // Return an error message to the user
-            require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-            return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest fuel prices at the moment. Please try again later.");
-        }
-    }
-}
+require_once plugin_dir_path(__FILE__) . 'includes/fuel/class-latest-fuel.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-fuel.php';
+require_once plugin_dir_path(__FILE__) . 'includes/fuel/class-historical-fuel.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/historical-fuel.php';
 
 /**
  * Get and show latest LP Gas prices.
@@ -553,7 +533,7 @@ require plugin_dir_path(__FILE__) . 'after-content/whatsapp-channel.php';
 require plugin_dir_path(__FILE__) . 'ads/ads.php';
 
 //Table shortcodes
-require_once API_END_BASE . 'tables/fuel.php';
+
 
 
 //To DO: Debug Block here
