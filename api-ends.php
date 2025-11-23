@@ -352,29 +352,14 @@ require_once plugin_dir_path(__FILE__) . 'shortcodes/zinara-transport.php';
 require_once plugin_dir_path(__FILE__) . 'templates/groceries.php';
 require_once plugin_dir_path(__FILE__) . 'templates/groceries-new.php';
 
+/**
+ * Get and show latest Fine Levels.
+ *
+ * @return string HTML table of latest Fine Levels or error message if unable to retrieve.
+ */
+require_once plugin_dir_path(__FILE__) . 'includes/fines/class-fine-levels.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/fine-levels.php';
 
-function zp_govt_fines($attr)
-{
-    try {
-
-        $fines = new ZIMAPI(ZIMAPI_BASE);
-        $latest_fines = "";
-        $endPoint = "/stats/fines/all";
-        $latest_fines = $fines->callApi($endPoint, zp_get_remote_ip());
-
-        $latest_prices = $fines->callApi($endPoint, zp_get_remote_ip());
-        require_once plugin_dir_path(__FILE__) . 'templates/govt-fines.php';
-        return zp_build_fines_table($latest_fines);
-    } catch (Exception $e) {
-        // Log the error
-        error_log('Error retrieving Govt fines data: ' . $e->getMessage());
-        // Return an error message to the user
-        require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-        return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest fines at the moment. Please try again later.");
-    }
-}
-add_shortcode('govt-fines', 'zp_govt_fines');
 
 function zp_govt_births($attr)
 {
