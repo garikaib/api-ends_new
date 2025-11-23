@@ -1,6 +1,4 @@
 <?php
-require_once plugin_dir_path(__FILE__) . '../includes/format-prices.php';
-
 /**
  * Builds the ZBC license fee table.
  *
@@ -11,6 +9,7 @@ require_once plugin_dir_path(__FILE__) . '../includes/format-prices.php';
  */
 function build_zbc_licence_fee_table(array $data, array $rates): string
 {
+    require_once plugin_dir_path(__FILE__) . '../includes/format-prices.php';
     // Initialize output with the table heading and current date
     $output = '<h4>ZBC License Fees on ' . zp_today_full_date() . '</h4>';
     $output .= '<figure class="wp-block-table"><table>';

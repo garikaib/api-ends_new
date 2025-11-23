@@ -1,14 +1,14 @@
 <?php
 
-require_once plugin_dir_path(__DIR__) . 'includes/usd-equivalent.php';
-require_once plugin_dir_path(__DIR__) . 'includes/show-price-footer.php';
-require_once plugin_dir_path(__DIR__) . 'includes/format-prices.php';
-require_once plugin_dir_path(__DIR__) . 'includes/dates.php';
 //Groceries
 add_shortcode('groceries', 'zp_grocery_prices');
 
 function zp_grocery_prices($attr)
 {
+    require_once plugin_dir_path(__DIR__) . 'includes/usd-equivalent.php';
+    require_once plugin_dir_path(__DIR__) . 'includes/show-price-footer.php';
+    require_once plugin_dir_path(__DIR__) . 'includes/format-prices.php';
+    require_once plugin_dir_path(__DIR__) . 'includes/dates.php';
     try {
         $type = "basic"; //Default type is all
         if (is_array($attr) && array_key_exists("type", $attr)) {

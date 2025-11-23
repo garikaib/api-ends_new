@@ -1,9 +1,8 @@
 <?php
 
-require_once plugin_dir_path(__DIR__) . "includes/format-prices.php";
-
 function zp_cvr_fees($attr)
 {
+    require_once plugin_dir_path(__DIR__) . "includes/format-prices.php";
     try {
 
         $fees = new ZIMAPI(ZIMAPI_BASE);
