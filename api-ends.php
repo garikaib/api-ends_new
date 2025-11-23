@@ -105,7 +105,12 @@ require_once plugin_dir_path(__FILE__) . 'includes/get-ip.php';
 /**
  * Show latest exchange rates.
  */
-require_once plugin_dir_path(__FILE__) . 'templates/rates.php';
+/**
+ * Show latest exchange rates.
+ */
+// require_once plugin_dir_path(__FILE__) . 'templates/rates.php';
+require_once plugin_dir_path(__FILE__) . 'includes/rates/class-exchange-rates.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-rates.php';
 
 /**
  * Get and show latest fuel prices.
