@@ -134,31 +134,8 @@ require_once plugin_dir_path(__FILE__) . 'shortcodes/historical-fuel.php';
  *
  * @return string HTML table of latest LP Gas prices or error message if unable to retrieve.
  */
-add_shortcode('show-latest-lpgas-prices', 'php_show_latest_lpgas_prices');
-function php_show_latest_lpgas_prices()
-{
-    if (is_singular() && has_shortcode(get_post()->post_content, 'show-latest-lpgas-prices')) {
-
-        try {
-            require_once plugin_dir_path(__FILE__) . 'templates/lp-gas.php';
-
-            $fuel_prices = new ZIMAPI(ZIMAPI_BASE);
-            $endPoint = "/fuel/lp-gas";
-            $latest_lpgas_prices = $fuel_prices->callApi($endPoint, zp_get_remote_ip());
-            $zim_rates = new ZIMAPI(ZIMAPI_BASE);
-            $end_point = '/rates/fx-rates';
-            $zim_latest_rates = $zim_rates->callApi($end_point, zp_get_remote_ip());
-            return build_lp_gas_table($latest_lpgas_prices, $zim_latest_rates);
-        } catch (Exception $e) {
-            // Log the error
-            error_log('Error retrieving LP Gas prices: ' . $e->getMessage());
-            // Return an error message to the user
-            require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-            return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest LP Gas prices at the moment. Please try again later.");
-        }
-    }
-}
+require_once plugin_dir_path(__FILE__) . 'includes/fuel/class-lp-gas.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/lp-gas.php';
 // Mbare Musika
 require_once plugin_dir_path(__FILE__) . 'templates/mbare-report.php';
 
