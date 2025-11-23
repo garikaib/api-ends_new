@@ -43,7 +43,7 @@ $curr_symbols = [
     'ZiG_BMSell' => 'ZiG',
 ];
 
-$headers = [
+$usd_headers = [
     '1 USD to ZiG' => 'ZiG_Mid',
     '1 ZiG to USD' => 'zig_to_usd',
     'Maximum Rate Businesses Can Use' => 'max_bus_rate', // 10%
@@ -51,6 +51,9 @@ $headers = [
     '1 USD to ZiG Highest Informal Sector Rate' => 'ZiG_BMSell',
     '1 ZiG to ZWL' => 'ZiG_ZWL',
     '1 USD to ZiG Cash rate' => 'ZiG_Cash',
+];
+
+$cross_headers = [
     'ZiG to South African Rand (ZAR)' => 'zig_to_zar',
     '1 South African Rand to ZiG' => 'zar_to_zig',
     '1 ZiG to Botswana Pula' => 'zig_to_bwp',
@@ -69,40 +72,47 @@ $headers = [
     '1 ZiG to Nigerian Naira' => 'zig_to_ngn',
 ];
 
-$rows = '';
-foreach ($headers as $header => $key) {
-    if ($key === 'zig_to_usd') {
-        $zig_to_usd = number_format(1 / $processed_data['rates']['ZiG_Mid'], 4, '.', '');
-        $value = 'US$' . $zig_to_usd;
-    } elseif ($key === 'max_bus_rate') {
-        $value = number_format($processed_data['rates']['ZiG_Ask'] * 1.0, 4, '.', '') . ' ZiG';
-    } else {
-        $value = array_key_exists($key, $processed_data['rates']) ? esc_html($processed_data['rates'][$key]) : 'N/A';
-        if ($value !== 'N/A' && is_numeric($value)) {
-            $value = number_format($value, 4, '.', '');
-            $symbol = isset($curr_symbols[$key]) ? $curr_symbols[$key] : '';
-            if ($symbol === 'ZiG') {
-                $value .= ' ' . $symbol;
-            } else {
-                $value = $symbol . $value;
+function zp_generate_rows($headers, $processed_data, $curr_symbols) {
+    $rows = '';
+    foreach ($headers as $header => $key) {
+        if ($key === 'zig_to_usd') {
+            $zig_to_usd = number_format(1 / $processed_data['rates']['ZiG_Mid'], 4, '.', '');
+            $value = 'US$' . $zig_to_usd;
+        } elseif ($key === 'max_bus_rate') {
+            $value = number_format($processed_data['rates']['ZiG_Ask'] * 1.0, 4, '.', '') . ' ZiG';
+        } else {
+            $value = array_key_exists($key, $processed_data['rates']) ? esc_html($processed_data['rates'][$key]) : 'N/A';
+            if ($value !== 'N/A' && is_numeric($value)) {
+                $value = number_format($value, 4, '.', '');
+                $symbol = isset($curr_symbols[$key]) ? $curr_symbols[$key] : '';
+                if ($symbol === 'ZiG') {
+                    $value .= ' ' . $symbol;
+                } else {
+                    $value = $symbol . $value;
+                }
             }
         }
-    }
-    if ($key === 'zig_to_usd' && $value !== 'N/A') {
-        $value .= "<sup class='zpc-rates-badge-official'>Official</sup>";
-    }
+        if ($key === 'ZiG_Mid' && $value !== 'N/A') {
+            $value .= "<sup class='zpc-rates-badge-official'>Official</sup>";
+        }
 
-    $rows .= "
-        <tr>
-            <td>{$header}</td>
-            <td>{$value}</td>
-        </tr>
-    ";
+        $rows .= "
+            <tr>
+                <td>{$header}</td>
+                <td>{$value}</td>
+            </tr>
+        ";
+    }
+    return $rows;
 }
+
+$usd_rows = zp_generate_rows($usd_headers, $processed_data, $curr_symbols);
+$cross_rows = zp_generate_rows($cross_headers, $processed_data, $curr_symbols);
 ?>
 
 <h4>Zimbabwe Gold (ZiG) Exchange Rates on <?php echo wp_kses_post($formatted_date); ?></h4>
 
+<h5 class="wp-block-heading">USD Exchange Rates</h5>
 <figure class='wp-block-table'>
     <table>
         <thead>
@@ -112,7 +122,46 @@ foreach ($headers as $header => $key) {
             </tr>
         </thead>
         <tbody>
-            <?php echo $rows; ?>
+            <?php echo $usd_rows; ?>
+        </tbody>
+    </table>
+</figure>
+
+<?php if (!empty($processed_data['rates']['business_rates']) && is_array($processed_data['rates']['business_rates'])) : ?>
+    <h5 class="wp-block-heading">Business Rates</h5>
+    <figure class='wp-block-table'>
+        <table>
+            <thead>
+                <tr>
+                    <th>Business/Shop</th>
+                    <th>Rate</th>
+                    <th>Currency</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($processed_data['rates']['business_rates'] as $business) : ?>
+                    <tr>
+                        <td><?php echo esc_html($business['name']); ?></td>
+                        <td><?php echo esc_html(number_format($business['rate'], 4)); ?></td>
+                        <td><?php echo esc_html($business['currency']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </figure>
+<?php endif; ?>
+
+<h5 class="wp-block-heading">Cross Rates</h5>
+<figure class='wp-block-table'>
+    <table>
+        <thead>
+            <tr>
+                <th>Rate</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php echo $cross_rows; ?>
         </tbody>
     </table>
 </figure>

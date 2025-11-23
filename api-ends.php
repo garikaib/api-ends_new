@@ -480,44 +480,10 @@ function zp_govt_passports($attr)
     }
 }
 add_shortcode('passport-fees', 'zp_govt_passports');
-function zp_zig_usd_table($attr)
-{
-    try {
-        $rates = new ZIMAPI(ZIMAPI_BASE);
-        $endPoint = "/rates/fx-rates";
-        $latest_rates = $rates->callApi($endPoint, zp_get_remote_ip());
-        $oe_endpoint = '/rates/oe-rates/raw';
-        $oe_rates = $rates->callApi($oe_endpoint, zp_get_remote_ip());
-        require_once plugin_dir_path(__FILE__) . 'templates/zig_to_usd.php';
-        return build_zig_to_usd_table($latest_rates, $oe_rates);
-    } catch (Exception $e) {
-        // Log the error
-        error_log('Error retrieving OE rates: ' . $e->getMessage());
-        // Return an error message to the user
-        require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-        return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest rates at the moment. Please try again later.");
-    }
-}
-add_shortcode('zig-usd', 'zp_zig_usd_table');
-function zp_usd_zip_table($attr)
-{
-    try {
-        $rates = new ZIMAPI(ZIMAPI_BASE);
-        $endPoint = "/rates/fx-rates";
-        $latest_rates = $rates->callApi($endPoint, zp_get_remote_ip());
-        require_once plugin_dir_path(__FILE__) . 'templates/usd_to_zip.php';
-        return build_usd_zig_table($latest_rates);
-    } catch (Exception $e) {
-        // Log the error
-        error_log('Error retrieving ZiG-USD limits: ' . $e->getMessage());
-        // Return an error message to the user
-        require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-        return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest ZiG-USD rates at the moment. Please try again later.");
-    }
-}
-add_shortcode('usd-zig', 'zp_usd_zip_table');
+require_once plugin_dir_path(__FILE__) . 'includes/rates/class-zig-usd.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/zig-usd.php';
+require_once plugin_dir_path(__FILE__) . 'includes/rates/class-usd-zig.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/usd-zig.php';
 function zp_zig_usd_withdrawal_limits($attr)
 {
     try {

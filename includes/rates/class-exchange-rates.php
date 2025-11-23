@@ -52,6 +52,18 @@ class ZP_Exchange_Rates
      */
     public function process_rates($data)
     {
+        // Check for success flags
+        if (empty($data['oe_rates']['success']) || empty($data['rates']['success'])) {
+            return new WP_Error('api_error', 'API call failed or partial failure');
+        }
+
+        if (!isset($data['oe_rates']['data']) || !is_array($data['oe_rates']['data'])) {
+            return new WP_Error('api_error', 'Invalid OE rates data');
+        }
+        if (!isset($data['rates']['data']) || !is_array($data['rates']['data'])) {
+            return new WP_Error('api_error', 'Invalid rates data');
+        }
+
         $oe_rates = $data['oe_rates']['data'];
         $rates_data = $data['rates']['data'];
 
@@ -132,6 +144,11 @@ class ZP_Exchange_Rates
         }
 
         $processed_data = $this->process_rates($data);
+
+        if (is_wp_error($processed_data)) {
+            require_once plugin_dir_path(dirname(dirname(__FILE__))) . 'includes/class-show-notice.php';
+            return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest Exchange rates at the moment. Please try again later.");
+        }
 
         ob_start();
         include plugin_dir_path(dirname(dirname(__FILE__))) . 'templates/parts/latest-rates-table.php';
