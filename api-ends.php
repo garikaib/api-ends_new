@@ -196,25 +196,27 @@ function liquid_home_prices($attr)
 }
 //Get and show latest TelOne Prices
 function telone_internet_prices($attr)
-{try {
-    $type = "All"; //Default type is all
-    if (is_array($attr) && array_key_exists("type", $attr)) {
-        $type = $attr["type"];
-    }
+{
+    try {
+        $type = "All"; //Default type is all
+        if (is_array($attr) && array_key_exists("type", $attr)) {
+            $type = $attr["type"];
+        }
 
-    require_once plugin_dir_path(__FILE__) . 'templates/telone.php';
-    $telone = new ZIMAPI(ZIMAPI_BASE);
-    $endPoint = "/prices/isp/telone";
-    $latest_prices = $telone->callApi($endPoint, zp_get_remote_ip());
-    $endPoint = "/rates/fx-rates";
-    $latest_rates = $telone->callApi($endPoint, zp_get_remote_ip());
-    return buildTelOnePrices($latest_prices, $type, $latest_rates);
-} catch (Exception $e) {
-    // Log the error
-    error_log('Error retrieving TelOne prices: ' . $e->getMessage());
-    // Return an error message to the user
-    return '<p><strong>Sorry, we could not retrieve the latest TelOne prices at the moment. Please try again later.</strong></p>';
-}}
+        require_once plugin_dir_path(__FILE__) . 'templates/telone.php';
+        $telone = new ZIMAPI(ZIMAPI_BASE);
+        $endPoint = "/prices/isp/telone";
+        $latest_prices = $telone->callApi($endPoint, zp_get_remote_ip());
+        $endPoint = "/rates/fx-rates";
+        $latest_rates = $telone->callApi($endPoint, zp_get_remote_ip());
+        return buildTelOnePrices($latest_prices, $type, $latest_rates);
+    } catch (Exception $e) {
+        // Log the error
+        error_log('Error retrieving TelOne prices: ' . $e->getMessage());
+        // Return an error message to the user
+        return '<p><strong>Sorry, we could not retrieve the latest TelOne prices at the moment. Please try again later.</strong></p>';
+    }
+}
 add_shortcode('telone', 'telone_internet_prices');
 
 //Get latest Utande prices and show in tables
@@ -222,91 +224,97 @@ add_shortcode('telone', 'telone_internet_prices');
 require_once plugin_dir_path(__FILE__) . 'shortcodes/utande.php';
 
 function netone_data_bundles($attr)
-{try {
-    $type = "All"; //Default type is all
-    if (is_array($attr) && array_key_exists("type", $attr)) {
-        $type = $attr["type"];
-    }
-    $filter = "none";
-    if (is_array($attr) && array_key_exists("filter", $attr)) {
-        $filter = $attr["filter"];
-    }
+{
+    try {
+        $type = "All"; //Default type is all
+        if (is_array($attr) && array_key_exists("type", $attr)) {
+            $type = $attr["type"];
+        }
+        $filter = "none";
+        if (is_array($attr) && array_key_exists("filter", $attr)) {
+            $filter = $attr["filter"];
+        }
 
-    require_once plugin_dir_path(__FILE__) . 'templates/netone.php';
-    require_once plugin_dir_path(__FILE__) . 'includes/get-mobile-data-desc.php';
+        require_once plugin_dir_path(__FILE__) . 'templates/netone.php';
+        require_once plugin_dir_path(__FILE__) . 'includes/get-mobile-data-desc.php';
 
-    $netone = new ZIMAPI(ZIMAPI_BASE);
-    $endPoint = "/prices/mnos/bundles/netone";
-    $latest_prices = $netone->callApi($endPoint, zp_get_remote_ip());
-    $endPoint = "/rates/fx-rates";
-    $latest_rates = $netone->callApi($endPoint, zp_get_remote_ip());
-    return build_netone_prices($latest_prices, $latest_rates, $type, $filter);
-} catch (Exception $e) {
-    // Log the error
-    error_log('Error retrieving NetOne prices: ' . $e->getMessage());
-    // Return an error message to the user
-    return '<p><strong>Sorry, we could not retrieve the latest NetOne prices at the moment. Please try again later.</strong></p>';
-}}
+        $netone = new ZIMAPI(ZIMAPI_BASE);
+        $endPoint = "/prices/mnos/bundles/netone";
+        $latest_prices = $netone->callApi($endPoint, zp_get_remote_ip());
+        $endPoint = "/rates/fx-rates";
+        $latest_rates = $netone->callApi($endPoint, zp_get_remote_ip());
+        return build_netone_prices($latest_prices, $latest_rates, $type, $filter);
+    } catch (Exception $e) {
+        // Log the error
+        error_log('Error retrieving NetOne prices: ' . $e->getMessage());
+        // Return an error message to the user
+        return '<p><strong>Sorry, we could not retrieve the latest NetOne prices at the moment. Please try again later.</strong></p>';
+    }
+}
 add_shortcode('netone-bundles', 'netone_data_bundles');
 //Econet data bundles
 function econet_data_bundles($attr)
-{try {
-    $type = "All"; //Default type is all
-    if (is_array($attr) && array_key_exists("type", $attr)) {
-        $type = $attr["type"];
-    }
-    $filter = "none";
-    if (is_array($attr) && array_key_exists("filter", $attr)) {
-        $filter = $attr["filter"];
-    }
+{
+    try {
+        $type = "All"; //Default type is all
+        if (is_array($attr) && array_key_exists("type", $attr)) {
+            $type = $attr["type"];
+        }
+        $filter = "none";
+        if (is_array($attr) && array_key_exists("filter", $attr)) {
+            $filter = $attr["filter"];
+        }
 
-    require_once plugin_dir_path(__FILE__) . 'templates/econet.php';
-    require_once plugin_dir_path(__FILE__) . 'includes/get-mobile-data-desc.php';
+        require_once plugin_dir_path(__FILE__) . 'templates/econet.php';
+        require_once plugin_dir_path(__FILE__) . 'includes/get-mobile-data-desc.php';
 
-    $econet = new ZIMAPI(ZIMAPI_BASE);
-    $endPoint = "/prices/mnos/bundles/econet";
-    $latest_prices = $econet->callApi($endPoint, zp_get_remote_ip());
-    $endPoint = "/rates/fx-rates";
-    $latest_rates = $econet->callApi($endPoint, zp_get_remote_ip());
-    return buildEconetPrices($latest_prices, $latest_rates, $type, $filter);
-} catch (Exception $e) {
-    // Log the error
-    error_log('Error retrieving Econet prices: ' . $e->getMessage());
-    // Return an error message to the user
-    return '<p><strong>Sorry, we could not retrieve the latest Econet prices at the moment. Please try again later.</strong></p>';
-}}
+        $econet = new ZIMAPI(ZIMAPI_BASE);
+        $endPoint = "/prices/mnos/bundles/econet";
+        $latest_prices = $econet->callApi($endPoint, zp_get_remote_ip());
+        $endPoint = "/rates/fx-rates";
+        $latest_rates = $econet->callApi($endPoint, zp_get_remote_ip());
+        return buildEconetPrices($latest_prices, $latest_rates, $type, $filter);
+    } catch (Exception $e) {
+        // Log the error
+        error_log('Error retrieving Econet prices: ' . $e->getMessage());
+        // Return an error message to the user
+        return '<p><strong>Sorry, we could not retrieve the latest Econet prices at the moment. Please try again later.</strong></p>';
+    }
+}
 add_shortcode('econet-bundles', 'econet_data_bundles');
 //Telecel data bundles
 //Econet data bundles
 function telecel_data_bundles($attr)
-{try {
-    $type = "All"; //Default type is all
-    if (is_array($attr) && array_key_exists("type", $attr)) {
-        $type = $attr["type"];
+{
+    try {
+        $type = "All"; //Default type is all
+        if (is_array($attr) && array_key_exists("type", $attr)) {
+            $type = $attr["type"];
+        }
+        $filter = "none";
+        if (is_array($attr) && array_key_exists("filter", $attr)) {
+            $filter = $attr["filter"];
+        }
+
+        require_once plugin_dir_path(__FILE__) . 'templates/telecel.php';
+        require_once plugin_dir_path(__FILE__) . 'includes/get-mobile-data-desc.php';
+
+        $telecel = new ZIMAPI(ZIMAPI_BASE);
+        $endPoint = "/prices/mnos/bundles/telecel";
+        $latest_prices = $telecel->callApi($endPoint, zp_get_remote_ip());
+        $endPoint = "/rates/fx-rates";
+        $latest_rates = $telecel->callApi($endPoint, zp_get_remote_ip());
+        return buildTelecelPrices($latest_prices, $latest_rates, $type, $filter);
+
+    } catch (Exception $e) {
+        // Log the error
+        error_log('Error retrieving Telecel tariffs: ' . $e->getMessage());
+        // Return an error message to the user
+        require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
+
+        return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest Telecel Tariffs at the moment. Please try again later.");
     }
-    $filter = "none";
-    if (is_array($attr) && array_key_exists("filter", $attr)) {
-        $filter = $attr["filter"];
-    }
-
-    require_once plugin_dir_path(__FILE__) . 'templates/telecel.php';
-    require_once plugin_dir_path(__FILE__) . 'includes/get-mobile-data-desc.php';
-
-    $telecel = new ZIMAPI(ZIMAPI_BASE);
-    $endPoint = "/prices/mnos/bundles/telecel";
-    $latest_prices = $telecel->callApi($endPoint, zp_get_remote_ip());
-    $endPoint = "/rates/fx-rates";
-    $latest_rates = $telecel->callApi($endPoint, zp_get_remote_ip());
-    return buildTelecelPrices($latest_prices, $latest_rates, $type, $filter);
-
-} catch (Exception $e) {
-    // Log the error
-    error_log('Error retrieving Telecel tariffs: ' . $e->getMessage());
-    // Return an error message to the user
-    require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-    return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest Telecel Tariffs at the moment. Please try again later.");
-}}
+}
 add_shortcode('telecel-bundles', 'telecel_data_bundles');
 //ZESA tariffs
 function zesa_tariffs($attr)
@@ -334,34 +342,36 @@ function zesa_tariffs($attr)
 add_shortcode('zesa-tariffs', 'zesa_tariffs');
 //Delta Alcohol
 function zp_drink_prices($attr)
-{try {
-    $type = "deltaa"; //Default type is all
-    if (is_array($attr) && array_key_exists("type", $attr)) {
-        $type = $attr["type"];
+{
+    try {
+        $type = "deltaa"; //Default type is all
+        if (is_array($attr) && array_key_exists("type", $attr)) {
+            $type = $attr["type"];
+        }
+
+        $drinks = new ZIMAPI(ZIMAPI_BASE);
+        $latest_prices = "";
+        $endPoint = "/rates/fx-rates";
+        $latest_rates = $drinks->callApi($endPoint, zp_get_remote_ip());
+        if ($type === "deltaa") {
+            $endPoint = "/prices/drinks/deltaa";
+            $latest_prices = $drinks->callApi($endPoint, zp_get_remote_ip());
+            require_once plugin_dir_path(__FILE__) . 'templates/delta-alcohol.php';
+            return build_delta_a_table($latest_prices, $latest_rates);
+        } else {
+
+            require_once plugin_dir_path(__FILE__) . 'templates/zesa-tariffs.php';
+            return buildZESATable($latest_prices, $latest_rates);
+        }
+    } catch (Exception $e) {
+        // Log the error
+        error_log('Error retrieving Delta prices: ' . $e->getMessage());
+        // Return an error message to the user
+        require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
+
+        return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest Delta prices at the moment. Please try again later.");
     }
-
-    $drinks = new ZIMAPI(ZIMAPI_BASE);
-    $latest_prices = "";
-    $endPoint = "/rates/fx-rates";
-    $latest_rates = $drinks->callApi($endPoint, zp_get_remote_ip());
-    if ($type === "deltaa") {
-        $endPoint = "/prices/drinks/deltaa";
-        $latest_prices = $drinks->callApi($endPoint, zp_get_remote_ip());
-        require_once plugin_dir_path(__FILE__) . 'templates/delta-alcohol.php';
-        return build_delta_a_table($latest_prices, $latest_rates);
-    } else {
-
-        require_once plugin_dir_path(__FILE__) . 'templates/zesa-tariffs.php';
-        return buildZESATable($latest_prices, $latest_rates);
-    }
-} catch (Exception $e) {
-    // Log the error
-    error_log('Error retrieving Delta prices: ' . $e->getMessage());
-    // Return an error message to the user
-    require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-    return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest Delta prices at the moment. Please try again later.");
-}}
+}
 add_shortcode('drink-prices', 'zp_drink_prices');
 
 //Transport and ZINARA
@@ -536,16 +546,16 @@ require_once plugin_dir_path(__FILE__) . 'includes/generate-paypal.php';
 
 function load_schema_files_if_yoast_active()
 {
-// Check if Yoast SEO plugin is active
+    // Check if Yoast SEO plugin is active
     if (is_plugin_active('wordpress-seo/wp-seo.php')) {
-//Add Schema to various pages
-//Rate Schema
+        //Add Schema to various pages
+        //Rate Schema
         require_once plugin_dir_path(__FILE__) . 'includes/schema/rates-schema.php';
-//Mbare Prices page
+        //Mbare Prices page
         require_once plugin_dir_path(__FILE__) . 'includes/schema/mbare-schema.php';
-//Fuel Prices page
+        //Fuel Prices page
         require_once plugin_dir_path(__FILE__) . 'includes/schema/fuel-schema.php';
-//LP Gas
+        //LP Gas
         require_once plugin_dir_path(__FILE__) . 'includes/schema/lp-gas-schema.php';
     }
 }
@@ -577,5 +587,3 @@ require_once API_END_BASE . 'tables/fuel.php';
 
 //To DO: Debug Block here
 // require plugin_dir_path(__FILE__) . 'blocks/contact-info-block.php';
-
-
