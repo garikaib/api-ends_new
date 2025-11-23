@@ -67,7 +67,14 @@ register_deactivation_hook(__FILE__, 'deactivate_api_end');
 ;
 define('API_END_BASE', plugin_dir_path(__FILE__));
 define('API_END_URL', plugin_dir_url(__FILE__));
-require_once API_END_BASE . 'includes/carbon/settings-page.php';
+// Load Admin Classes
+require_once API_END_BASE . 'includes/Admin/CarbonFields/Settings.php';
+require_once API_END_BASE . 'includes/Admin/CarbonFields/AdsSettings.php';
+require_once API_END_BASE . 'includes/Admin/AdminManager.php';
+
+// Initialize Admin Manager
+new \ZimPriceCheck\ApiEnds\Admin\AdminManager();
+
 require_once API_END_BASE . 'includes/utils/admin-notices.php';
 
 //Do this only after we have loaded carbon fields

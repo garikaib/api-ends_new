@@ -3,7 +3,8 @@
 // ads.php
 
 // Include the Carbon Fields settings
-require_once plugin_dir_path(__FILE__) . 'control.php';
+// Include the Carbon Fields settings
+// require_once plugin_dir_path(__FILE__) . 'control.php';
 /**
  * Global variable to track if we're inside the actual content
  */
