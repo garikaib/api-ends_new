@@ -360,6 +360,14 @@ require_once plugin_dir_path(__FILE__) . 'templates/groceries-new.php';
 require_once plugin_dir_path(__FILE__) . 'includes/fines/class-fine-levels.php';
 require_once plugin_dir_path(__FILE__) . 'shortcodes/fine-levels.php';
 
+/**
+ * Get and show Traffic Fines.
+ *
+ * @return string HTML table of Traffic Fines or error message if unable to retrieve.
+ */
+require_once plugin_dir_path(__FILE__) . 'includes/fines/class-traffic-fines.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/traffic-fines.php';
+
 
 function zp_govt_births($attr)
 {
