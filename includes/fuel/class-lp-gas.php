@@ -17,7 +17,7 @@ class ZP_LP_Gas
      */
     public function __construct()
     {
-        $this->zim_api = new ZIMAPI(ZIMAPI_BASE);
+        $this->zim_api = new CachedZIMAPI(ZIMAPI_BASE);
     }
 
     /**

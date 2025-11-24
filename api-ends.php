@@ -13,10 +13,10 @@
  * @package           Api_End
  *
  * @wordpress-plugin
- * Plugin Name:       API End
+ * Plugin Name:       Zimpricecheck API
  * Plugin URI:        https://zimpricecheck.com
- * Description:       Allow us to generate HTML from our API endpoints on the server side to improve compatibility
- * Version:           1.0.0
+ * Description:       The core engine for Zimpricecheck.com, handling API integrations, exchange rates, fuel prices, and fines.
+ * Version:           1.0.1
  * Author:            Garikai Dzoma
  * Author URI:        https://zimpricecheck.com
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('API_END_VERSION', '1.0.0');
+define('API_END_VERSION', '1.0.1');
 
 /**
  * The code that runs during plugin activation.
@@ -70,6 +70,7 @@ define('API_END_URL', plugin_dir_url(__FILE__));
 // Load Admin Classes
 require_once API_END_BASE . 'includes/Admin/CarbonFields/Settings.php';
 require_once API_END_BASE . 'includes/Admin/CarbonFields/AdsSettings.php';
+require_once API_END_BASE . 'includes/Admin/CarbonFields/CacheSettings.php';
 require_once API_END_BASE . 'includes/Admin/AdminManager.php';
 
 // Initialize Admin Manager
@@ -116,6 +117,8 @@ require_once plugin_dir_path(__FILE__) . 'includes/get-ip.php';
  * Show latest exchange rates.
  */
 // require_once plugin_dir_path(__FILE__) . 'templates/rates.php';
+require_once plugin_dir_path(__FILE__) . 'includes/class-cached-zimapi.php';
+require_once plugin_dir_path(__FILE__) . 'includes/format-prices.php';
 require_once plugin_dir_path(__FILE__) . 'includes/rates/class-exchange-rates.php';
 require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-rates.php';
 

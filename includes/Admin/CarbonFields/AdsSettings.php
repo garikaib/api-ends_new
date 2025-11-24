@@ -14,9 +14,8 @@ class AdsSettings
 
     public function register()
     {
-        Container::make('theme_options', __('Zimpricecheck Ads Settings', 'zimpricecheck-ads'))
-            ->set_page_menu_title('Zimpricecheck Ads')
-            ->set_page_menu_position(30)
+        Container::make('theme_options', __('Ads Settings', 'zimpricecheck-ads'))
+            ->set_page_parent('zpc-api')
             ->add_fields($this->get_fields());
     }
 
@@ -24,7 +23,7 @@ class AdsSettings
     {
         return array(
             Field::make('html', 'crb_ads_settings_header')
-                ->set_html('<div class="zpc-header"><h2 class="zpc-title">Ads Settings</h2><p class="zpc-subtitle">Manage ad placements and visibility.</p></div>'),
+                ->set_html('<div class="zpc-header"><img src="' . API_END_URL . 'assets/images/ad_settings.svg" class="zpc-icon" /><div class="zpc-title-group"><h2 class="zpc-title">Ads Settings</h2><p class="zpc-subtitle">Manage ad placements and visibility.</p></div></div>'),
             Field::make('text', 'zpc_ads_position', __('Ad Position', 'zimpricecheck-ads'))
                 ->set_default_value('top')
                 ->set_help_text('Position of the ad (e.g., top, bottom).'),
