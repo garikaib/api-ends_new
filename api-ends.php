@@ -143,29 +143,9 @@ require_once plugin_dir_path(__FILE__) . 'shortcodes/lp-gas.php';
 require_once plugin_dir_path(__FILE__) . 'templates/mbare-report.php';
 
 //Get and show latest Liquid Home Prices
-add_shortcode('liquid-home', 'liquid_home_prices');
-function liquid_home_prices($attr)
-{
-    try {
-        $type = "All"; //Default type is all
-        if (is_array($attr) && array_key_exists("type", $attr)) {
-            $type = $attr["type"];
-        }
-
-        require_once plugin_dir_path(__FILE__) . 'templates/liquid.php';
-        $liquid = new ZIMAPI(ZIMAPI_BASE);
-        $endPoint = '/prices/isp/liquid-home';
-        $latest_prices = $liquid->callApi($endPoint, zp_get_remote_ip());
-        $endPoint = "/rates/fx-rates";
-        $latest_rates = $liquid->callApi($endPoint, zp_get_remote_ip());
-        return build_liquid_prices($latest_prices, $type, $latest_rates);
-    } catch (Exception $e) {
-        // Log the error
-        error_log('Error retrieving Liquid Home prices: ' . $e->getMessage());
-        // Return an error message to the user
-        return '<p><strong>Sorry, we could not retrieve the latest Liquid Home prices at the moment. Please try again later.</strong></p>';
-    }
-}
+//Get and show latest Liquid Home Prices
+require_once plugin_dir_path(__FILE__) . 'includes/isp/class-liquid-home.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/liquid-home.php';
 //Get and show latest TelOne Prices
 function telone_internet_prices($attr)
 {

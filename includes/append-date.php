@@ -42,6 +42,7 @@ function get_auto_tracked_pages()
         16649, // Fines
         17167, // Births and Deaths new
         18785, // LP GAs Prices
+        18797, // Traffic Fines
     ];
 }
 
