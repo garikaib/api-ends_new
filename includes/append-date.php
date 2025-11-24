@@ -41,6 +41,7 @@ function get_auto_tracked_pages()
         9344, // NetOne bundles
         16649, // Fines
         17167, // Births and Deaths new
+        18785, // LP GAs Prices
     ];
 }
 
