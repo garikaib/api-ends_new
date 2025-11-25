@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 $product_table = '';
 
 foreach ($prices as $product) {
-    if ($product['last_mile'] === $type) {
+    if (strtolower($product['last_mile']) === $type) {
         $zig_price = isset($product['zig_price']) && $product['zig_price'] != 0 ? $product['zig_price'] : $rates['rates']['ZiG_Mid'] * $product['usd_price'];
         $usd_price = isset($product['usd_price']) && $product['usd_price'] != 0 ? $product['usd_price'] : $product['zig_price'] / $rates['rates']['ZiG_Mid'];
         
@@ -40,7 +40,7 @@ foreach ($prices as $product) {
                 <th>Package Name</th>
                 <th>Normal Data(GB)</th>
                 <th>Night Data(GB)</th>
-                <?php echo ($type === 'LTE_USD' || $type === 'Fibre_USD' ? '<th>Estimated Price in ZiG</th>' : '<th>Price in ZiG</th>'); ?>
+                <?php echo ($type === 'lte_usd' || $type === 'fibre_usd' ? '<th>Estimated Price in ZiG</th>' : '<th>Price in ZiG</th>'); ?>
                 <th>Price in USD</th>
             </tr>
         </thead>

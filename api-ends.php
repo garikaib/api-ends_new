@@ -147,29 +147,9 @@ require_once plugin_dir_path(__FILE__) . 'templates/mbare-report.php';
 require_once plugin_dir_path(__FILE__) . 'includes/isp/class-liquid-home.php';
 require_once plugin_dir_path(__FILE__) . 'shortcodes/liquid-home.php';
 //Get and show latest TelOne Prices
-function telone_internet_prices($attr)
-{
-    try {
-        $type = "All"; //Default type is all
-        if (is_array($attr) && array_key_exists("type", $attr)) {
-            $type = $attr["type"];
-        }
-
-        require_once plugin_dir_path(__FILE__) . 'templates/telone.php';
-        $telone = new ZIMAPI(ZIMAPI_BASE);
-        $endPoint = "/prices/isp/telone";
-        $latest_prices = $telone->callApi($endPoint, zp_get_remote_ip());
-        $endPoint = "/rates/fx-rates";
-        $latest_rates = $telone->callApi($endPoint, zp_get_remote_ip());
-        return buildTelOnePrices($latest_prices, $type, $latest_rates);
-    } catch (Exception $e) {
-        // Log the error
-        error_log('Error retrieving TelOne prices: ' . $e->getMessage());
-        // Return an error message to the user
-        return '<p><strong>Sorry, we could not retrieve the latest TelOne prices at the moment. Please try again later.</strong></p>';
-    }
-}
-add_shortcode('telone', 'telone_internet_prices');
+//Get and show latest TelOne Prices
+require_once plugin_dir_path(__FILE__) . 'includes/isp/class-telone.php';
+require_once plugin_dir_path(__FILE__) . 'shortcodes/telone.php';
 
 //Get latest Utande prices and show in tables
 
