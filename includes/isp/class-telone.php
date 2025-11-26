@@ -177,7 +177,7 @@ class ZP_TelOne
             "adsl_usd" => "ADSL (USD)",
             "fibre" => "Fibre",
             "wifi" => 'WIFI',
-            "vsat" => 'VSAT',
+            "vsat" => 'VSAT/LEO',
             "usd" => "USD Bonus Bundle",
         ];
 

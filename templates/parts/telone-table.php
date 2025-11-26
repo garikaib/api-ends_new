@@ -160,8 +160,14 @@ foreach ($filtered_packages as $product) {
 <p><strong>Last Updated on <?php echo esc_html($rates['rates']['updatedAt'] ?? 'N/A'); ?></strong></p>
 <?php 
 $calculated_currency = $is_usd_primary ? 'ZiG' : 'USD';
+$extra_notes = [];
+if ($type === 'vsat') {
+    $extra_notes[] = "LEO (Low Earth Orbit) satellites like Starlink offer lower latency and higher speeds compared to traditional Geostationary VSAT systems, making them ideal for real-time applications.";
+}
+
 echo ZP_Table_Footer::render([
     'calculated_currency' => $calculated_currency,
-    'bundle_description' => $header_text
+    'bundle_description' => $header_text,
+    'extra_notes' => $extra_notes
 ]); 
 ?>

@@ -18,6 +18,7 @@ class ZP_Table_Footer
     {
         $calculated_currency = $args['calculated_currency'] ?? 'ZiG';
         $bundle_description = $args['bundle_description'] ?? '';
+        $extra_notes = $args['extra_notes'] ?? [];
 
         $html = "<h4>NB</h4>";
         $html .= "<ul>";
@@ -30,6 +31,13 @@ class ZP_Table_Footer
 
         $html .= "<li>" . $note_text . "</li>";
         $html .= "<li>This is done for informational purposes only.</li>";
+
+        if (!empty($extra_notes) && is_array($extra_notes)) {
+            foreach ($extra_notes as $note) {
+                $html .= "<li>" . esc_html($note) . "</li>";
+            }
+        }
+
         $html .= "</ul>";
 
         return $html;
