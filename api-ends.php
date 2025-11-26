@@ -77,6 +77,7 @@ require_once API_END_BASE . 'includes/Admin/AdminManager.php';
 new \ZimPriceCheck\ApiEnds\Admin\AdminManager();
 
 require_once API_END_BASE . 'includes/utils/admin-notices.php';
+require_once API_END_BASE . 'includes/class-table-footer.php';
 
 //Do this only after we have loaded carbon fields
 function api_ends_init()

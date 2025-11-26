@@ -158,4 +158,10 @@ foreach ($filtered_packages as $product) {
     <figcaption>Latest TelOne <?php echo esc_html($header_text); ?> Prices</figcaption>
 </figure>
 <p><strong>Last Updated on <?php echo esc_html($rates['rates']['updatedAt'] ?? 'N/A'); ?></strong></p>
-<?php echo zp_show_footer(); ?>
+<?php 
+$calculated_currency = $is_usd_primary ? 'ZiG' : 'USD';
+echo ZP_Table_Footer::render([
+    'calculated_currency' => $calculated_currency,
+    'bundle_description' => $header_text
+]); 
+?>
