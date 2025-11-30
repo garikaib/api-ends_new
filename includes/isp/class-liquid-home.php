@@ -2,7 +2,7 @@
 
 class ZP_Liquid_Home
 {
-    public function render($atts)
+    public function render(array $atts): string
     {
         $atts = shortcode_atts(
             array(
@@ -20,16 +20,13 @@ class ZP_Liquid_Home
             require_once API_END_BASE . 'includes/format-prices.php';
             require_once API_END_BASE . 'includes/dates.php';
 
-            $api = new CachedZIMAPI(ZIMAPI_BASE);
-            
-            // Fetch data using multiCallApi for optimization
-            $results = $api->multiCallApi([
-                'prices' => ['endpoint' => '/prices/isp/liquid-home'],
-                'rates' => ['endpoint' => '/rates/fx-rates']
-            ], zp_get_remote_ip());
+            // Fetch Prices from new endpoint
+            $api_prices = new CachedZIMAPI('https://a.clientemails.xyz/api');
+            $prices_data = $api_prices->callApi('/prices/isp/liquid-home', zp_get_remote_ip());
 
-            $prices_data = $results['prices'] ?? ['success' => false];
-            $rates_data = $results['rates'] ?? ['success' => false];
+            // Fetch Rates from default base
+            $api_rates = new CachedZIMAPI(ZIMAPI_BASE);
+            $rates_data = $api_rates->callApi('/rates/fx-rates', zp_get_remote_ip());
 
             if (!$prices_data['success'] || !$rates_data['success']) {
                  // Log specific errors if needed
@@ -37,11 +34,11 @@ class ZP_Liquid_Home
                  if (!$rates_data['success']) error_log('Rates fetch failed: ' . ($rates_data['error'] ?? 'Unknown error'));
             }
 
-            $prices = $prices_data['data']['prices']['package_prices'] ?? [];
-            $rates = $rates_data['data'] ?? [];
+            $prices = $prices_data['prices']['package_prices'] ?? [];
+            $rates = $rates_data ?? [];
 
             // Prepare data for template
-            $header_text = $this->gen_table_header($type);
+            $header_text = $this->get_package_description($type);
             $date = esc_html(zp_today_full_date());
             
             // Load template
@@ -56,7 +53,7 @@ class ZP_Liquid_Home
         }
     }
 
-    private function gen_table_header(string $conn_type): string
+    private function get_package_description(string $conn_type): string
     {
         $headers = [
             'fibre' => 'FibroniX packages',
@@ -69,7 +66,7 @@ class ZP_Liquid_Home
         return isset($headers[$conn_type]) ? $headers[$conn_type] : '';
     }
 
-    public static function liquid_is_limited(string $required, array $product)
+    public static function liquid_is_limited(string $required, array $product): string
     {
         if (!$product['capped']) {
             return 'Uncapped';

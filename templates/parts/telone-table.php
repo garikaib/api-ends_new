@@ -40,15 +40,18 @@ foreach ($prices as $p) {
     if (isset($p['zwl_price']) && $p['zwl_price'] > 0) {
         $currency_mode = 'zwl';
         $local_currency_header = "ZWL Price";
-    } elseif (isset($p['zwg_price'])) {
+    } elseif (isset($p['zwg_price']) || isset($p['zig_price'])) {
         $currency_mode = 'zwg';
         $local_currency_header = "Price in ZiG";
     }
 }
 
-// Get the BMSell rate for calculations
+// Get the BMSell and BMBuy rates for calculations
 $zig_bmsell_rate = $rates['rates']['ZiG_BMSell'] ?? ($rates['rates']['ZiG_Mid'] ?? 1);
 if ($zig_bmsell_rate <= 0) $zig_bmsell_rate = 1;
+
+$zig_bmbuy_rate = $rates['rates']['ZiG_BMBuy'] ?? ($rates['rates']['ZiG_Mid'] ?? 1);
+if ($zig_bmbuy_rate <= 0) $zig_bmbuy_rate = 1;
 
 foreach ($filtered_packages as $product) {
     $last_mile = strtoupper($product['last_mile']);
@@ -64,8 +67,9 @@ foreach ($filtered_packages as $product) {
         
         // Estimated ZiG Price
         if ($currency_mode === 'zwg') {
-             $est_zig = $usd_val * $zig_bmsell_rate;
-             $local_price_display = '$' . number_format($est_zig, 0) . ' ZWG (Est)';
+             // Use ZiG_BMBuy for USD -> ZiG conversion
+             $est_zig = $usd_val * $zig_bmbuy_rate;
+             $local_price_display = '$' . number_format($est_zig, 0) . ' ZWG';
              $local_currency_header = "Estimated Cost in ZiG";
         } else {
              $local_price_display = 'N/A';
@@ -84,8 +88,9 @@ foreach ($filtered_packages as $product) {
         }
 
         // Estimated USD Price
+        // Use ZiG_BMSell for ZiG -> USD conversion
         $est_usd = $local_val / $zig_bmsell_rate;
-        $usd_price_display = zp_format_prices($est_usd, "usd") . ' (Est)';
+        $usd_price_display = zp_format_prices($est_usd, "usd");
         $usd_currency_header = 'Estimated Price in $USD';
     }
 

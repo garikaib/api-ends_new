@@ -7,6 +7,6 @@ if (!defined('ABSPATH')) {
 function zp_liquid_home_shortcode($atts)
 {
     $liquid_home = new ZP_Liquid_Home();
-    return $liquid_home->render($atts);
+    return $liquid_home->render((array) $atts);
 }
 add_shortcode('liquid-home', 'zp_liquid_home_shortcode');
