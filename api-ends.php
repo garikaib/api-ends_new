@@ -71,6 +71,7 @@ define('API_END_URL', plugin_dir_url(__FILE__));
 require_once API_END_BASE . 'includes/Admin/CarbonFields/Settings.php';
 require_once API_END_BASE . 'includes/Admin/CarbonFields/AdsSettings.php';
 require_once API_END_BASE . 'includes/Admin/CarbonFields/CacheSettings.php';
+require_once API_END_BASE . 'includes/Admin/CarbonFields/DateSettings.php';
 require_once API_END_BASE . 'includes/Admin/AdminManager.php';
 
 // Initialize Admin Manager

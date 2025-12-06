@@ -5,6 +5,7 @@ namespace ZimPriceCheck\ApiEnds\Admin;
 use ZimPriceCheck\ApiEnds\Admin\CarbonFields\Settings;
 use ZimPriceCheck\ApiEnds\Admin\CarbonFields\AdsSettings;
 use ZimPriceCheck\ApiEnds\Admin\CarbonFields\CacheSettings;
+use ZimPriceCheck\ApiEnds\Admin\CarbonFields\DateSettings;
 
 class AdminManager
 {
@@ -27,6 +28,7 @@ class AdminManager
         new Settings();
         new AdsSettings();
         new CacheSettings();
+        new DateSettings();
     }
 
     public function enqueue_assets()
