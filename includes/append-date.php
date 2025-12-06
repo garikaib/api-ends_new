@@ -7,10 +7,17 @@ require_once plugin_dir_path(__DIR__) . "includes/dates.php";
 function get_auto_tracked_pages()
 {
     $ids = [];
-    $associations = carbon_get_theme_option('short_date_posts');
-    if ($associations) {
-        foreach ($associations as $assoc) {
-            $ids[] = $assoc['id'];
+    $rows = carbon_get_theme_option('short_date_posts');
+    if ($rows) {
+        foreach ($rows as $row) {
+            // Prioritize Association if set
+            if (!empty($row['post']) && count($row['post']) > 0) {
+                $ids[] = $row['post'][0]['id'];
+            } 
+            // Fallback to manual_id
+            elseif (!empty($row['manual_id'])) {
+                $ids[] = $row['manual_id'];
+            }
         }
     }
     return $ids;
