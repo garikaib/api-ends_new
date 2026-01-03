@@ -65,14 +65,17 @@ function build_zig_withdrawal_limits_table(array $data)
     $current_date = current_time('l, j F Y', true); // Format: Day, Day Number Month Year
 
     // Generating HTML for the table
-    $html = '<h4>' . sprintf(
+    $html = '<div class="fuel-prices-table">';
+    $html .= '<h4>' . sprintf(
         esc_html__('RBZ ZiG withdrawal limits and their USD equivalent on %s', 'text-domain'),
         $current_date
     ) . '</h4>';
     $html .= '<figure class="wp-block-table">';
     $html .= '<table class="has-fixed-layout">';
-    $html .= '<tbody>';
+    $html .= '<thead>';
     $html .= '<tr><th>' . esc_html__('Account Category', 'text-domain') . '</th><th>' . esc_html__('Weekly Limit', 'text-domain') . '</th><th>' . esc_html__('ZiG Weekly Limit in USD', 'text-domain') . '</th><th>' . esc_html__('Monthly Limit', 'text-domain') . '</th><th>' . esc_html__('ZiG Monthly Limit in USD', 'text-domain') . '</th></tr>';
+    $html .= '</thead>';
+    $html .= '<tbody>';
 
     // Loop through each category and add its limits to the table
     $categories = [
@@ -89,6 +92,7 @@ function build_zig_withdrawal_limits_table(array $data)
     $html .= '</table>';
     $html .= '<figcaption class="wp-element-caption">' . esc_html__('The latest ZiG Withdrawal limits', 'text-domain') . '</figcaption>';
     $html .= '</figure>';
+    $html .= '</div>';
 
     // Output the generated HTML
     return $html;

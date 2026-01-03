@@ -10,15 +10,32 @@ use ZPC\ApiEnds\Utils\NetworkUtil;
  * 
  * Performance-optimized, strictly-typed API client for V2 endpoints.
  */
-final readonly class ApiService
+final class ApiService
 {
-    private string $baseUrl;
-    private int $cacheTtl;
+    private ?string $baseUrl = null;
+    private ?int $cacheTtl = null;
 
-    public function __construct()
+    /**
+     * Get the base URL, reading from option if not cached.
+     */
+    private function getBaseUrl(): string
     {
-        $this->baseUrl = get_option('zimapi_base_url', '');
-        $this->cacheTtl = (int) get_option('zimapi_cache_duration', 3600);
+        if ($this->baseUrl === null) {
+            $default = defined('ZIMAPI_BASE') ? ZIMAPI_BASE : '';
+            $this->baseUrl = get_option('zpc_api_base_url', $default);
+        }
+        return $this->baseUrl;
+    }
+
+    /**
+     * Get cache TTL.
+     */
+    private function getCacheTtl(): int
+    {
+        if ($this->cacheTtl === null) {
+            $this->cacheTtl = (int) get_option('zpc_cache_duration', 3600);
+        }
+        return $this->cacheTtl;
     }
 
     /**
@@ -29,7 +46,12 @@ final readonly class ApiService
         $url = $this->buildUrl($endpoint, $params);
         $cacheKey = 'zpc_api_' . md5($url);
 
+        error_log('[ApiService::get] Endpoint: ' . $endpoint);
+        error_log('[ApiService::get] Base URL: ' . $this->getBaseUrl());
+        error_log('[ApiService::get] Full URL: ' . $url);
+
         if ($useCache && ($cached = get_transient($cacheKey)) !== false) {
+            error_log('[ApiService::get] Returning cached data for: ' . $endpoint);
             return $cached;
         }
 
@@ -41,10 +63,17 @@ final readonly class ApiService
             ],
         ]);
 
+        error_log('[ApiService::get] wp_remote_get response type: ' . gettype($response));
+        if (is_wp_error($response)) {
+            error_log('[ApiService::get] WP Error: ' . $response->get_error_message());
+        } else {
+            error_log('[ApiService::get] Response code: ' . wp_remote_retrieve_response_code($response));
+        }
+
         $data = $this->parseResponse($response);
 
         if ($useCache && !empty($data)) {
-            set_transient($cacheKey, $data, $this->cacheTtl);
+            set_transient($cacheKey, $data, $this->getCacheTtl());
         }
 
         return $data;
@@ -55,7 +84,7 @@ final readonly class ApiService
      */
     private function buildUrl(string $endpoint, array $params): string
     {
-        $url = rtrim($this->baseUrl, '/') . '/' . ltrim($endpoint, '/');
+        $url = rtrim($this->getBaseUrl(), '/') . '/' . ltrim($endpoint, '/');
         
         if (!empty($params)) {
             $url = add_query_arg($params, $url);

@@ -25,7 +25,7 @@
     --zpc-border: 1px solid #dddddd;
 
     /* Shadows */
-    --zpc-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --zpc-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Base Styles */
@@ -75,9 +75,20 @@
     font-weight: 500;
 }
 
-.zpc-badge-success { background: var(--zpc-success); color: white; }
-.zpc-badge-error { background: var(--zpc-error); color: white; }
-.zpc-badge-warning { background: var(--zpc-warning); color: white; }
+.zpc-badge-success {
+    background: var(--zpc-success);
+    color: white;
+}
+
+.zpc-badge-error {
+    background: var(--zpc-error);
+    color: white;
+}
+
+.zpc-badge-warning {
+    background: var(--zpc-warning);
+    color: white;
+}
 
 /* Admin Grid Layout (for Dashboard) */
 .zpc-admin-grid {
@@ -93,4 +104,48 @@
     border-radius: var(--zpc-radius);
     box-shadow: var(--zpc-shadow);
     border: var(--zpc-border);
+}
+
+/* Flag Icons (for rate converter tables) */
+.flag-icon {
+    width: 20px;
+    height: 14px;
+    vertical-align: middle;
+    margin-left: 5px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+/* Fuel/Rates Prices Table (legacy template support) */
+.fuel-prices-table {
+    margin: var(--zpc-space-md) 0;
+}
+
+.fuel-prices-table h4 {
+    margin-bottom: var(--zpc-space-md);
+    color: var(--zpc-secondary);
+}
+
+.fuel-prices-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--zpc-bg);
+    box-shadow: var(--zpc-shadow);
+}
+
+.fuel-prices-table th {
+    background: var(--zpc-secondary);
+    color: white;
+    padding: var(--zpc-space-md);
+    text-align: left;
+    font-weight: 600;
+}
+
+.fuel-prices-table td {
+    padding: var(--zpc-space-md);
+    border-bottom: var(--zpc-border);
+}
+
+.fuel-prices-table tr:nth-child(even) {
+    background: var(--zpc-bg-alt);
 }

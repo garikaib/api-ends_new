@@ -55,6 +55,7 @@ final class Plugin
         // Initialize Admin Dashboard
         if (is_admin()) {
             new Admin\Dashboard();
+            new Admin\SettingsPage();
         }
 
         // Initialize Controllers

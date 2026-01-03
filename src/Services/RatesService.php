@@ -8,7 +8,7 @@ namespace ZPC\ApiEnds\Services;
  * Logic for processing and calculating currency exchange rates.
  * Ported from legacy ZP_Exchange_Rates with PHP 8.2 enhancements.
  */
-final readonly class RatesService
+final class RatesService
 {
     public function __construct(
         private ApiService $apiService
@@ -19,14 +19,42 @@ final readonly class RatesService
      */
     public function getLatestRates(): array
     {
-        $rates = $this->apiService->get('rates/fx-rates');
-        $oeRates = $this->apiService->get('rates/oe-rates/raw');
+        error_log('[RatesService::getLatestRates] Starting...');
+        
+        // V2 API endpoints
+        $rates = $this->apiService->get('v2/rates/fx-rates');
+        error_log('[RatesService::getLatestRates] fx-rates response: ' . print_r($rates, true));
+        
+        $oeRates = $this->apiService->get('v2/rates/oe-rates/raw');
+        error_log('[RatesService::getLatestRates] oe-rates response: ' . print_r($oeRates, true));
 
         if (empty($rates) || empty($oeRates)) {
+            error_log('[RatesService::getLatestRates] Empty data - returning empty array');
             return [];
         }
 
         return $this->processRates($rates, $oeRates);
+    }
+
+    /**
+     * Get official rates for OE (Open Exchange) currencies.
+     * Returns processed array for ZiG/USD converters.
+     */
+    public function getOfficialRates(): array
+    {
+        error_log('[RatesService::getOfficialRates] Starting...');
+        
+        // V2 API endpoint
+        $oeRates = $this->apiService->get('v2/rates/oe-rates/raw');
+        error_log('[RatesService::getOfficialRates] oe-rates response: ' . print_r($oeRates, true));
+
+        if (empty($oeRates)) {
+            error_log('[RatesService::getOfficialRates] Empty data - returning empty array');
+            return [];
+        }
+
+        $oeRaw = $oeRates['rates'] ?? [];
+        return $this->buildOeArray($oeRaw);
     }
 
     /**

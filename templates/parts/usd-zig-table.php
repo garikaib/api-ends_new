@@ -1,3 +1,4 @@
+<?php
 use ZPC\ApiEnds\Utils\DateUtil;
 use ZPC\ApiEnds\Utils\PriceUtil;
 
