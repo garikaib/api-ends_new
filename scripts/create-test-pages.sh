@@ -1,9 +1,24 @@
-#!/bin/bash
-# V2 Shortcode Migration Test Pages Creator
-# Run this script from Local WP's "Open Site Shell"
-# Navigate to: /app/public first
+# Run this script from the project root or scripts directory
+# Navigate to correct WP root if needed, or assume we are running in context
 
-cd /app/public
+# 0. cleanup old pages function
+delete_existing_pages() {
+    echo "Checking for existing 'V2 Shortcode Tests' pages..."
+    EXISTING_IDS=$(wp post list --post_type=page --post_title='V2 Shortcode Tests' --field=ID --format=csv)
+    
+    if [ ! -z "$EXISTING_IDS" ]; then
+        echo "Found existing pages with IDs: $EXISTING_IDS. Deleting..."
+        # Iterate to handle multiple IDs causing errors in single command
+        for id in $(echo $EXISTING_IDS | tr "," " "); do
+            wp post delete $id --force
+        done
+        echo "Old pages deleted."
+    else
+        echo "No existing pages found."
+    fi
+}
+
+delete_existing_pages
 
 echo "Creating V2 Shortcode Test Pages..."
 

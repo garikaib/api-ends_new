@@ -41,7 +41,8 @@ class TransportService {
      * @return array
      */
     public function getZupcoFares(): array {
-        $prices = $this->api->get('/prices/zupco');
+        $prices = $this->api->get('/prices/fares/zupco');
+        error_log('[TransportService] ZUPCO raw: ' . print_r($prices, true));
         $rates = $this->api->get('/rates/fx-rates');
 
         return [
@@ -57,6 +58,7 @@ class TransportService {
      */
     public function getBusFares(): array {
         $prices = $this->api->get('/prices/bus-fares');
+        error_log('[TransportService] Bus Fares raw: ' . print_r($prices, true));
         $rates = $this->api->get('/rates/fx-rates');
 
         return [
