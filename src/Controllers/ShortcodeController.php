@@ -23,7 +23,8 @@ final readonly class ShortcodeController
         private \ZPC\ApiEnds\Services\GovtService $govtService,
         private \ZPC\ApiEnds\Services\ZesaService $zesaService,
         private \ZPC\ApiEnds\Services\ConsumerGoodsService $consumerGoodsService,
-        private \ZPC\ApiEnds\Services\TransportService $transportService
+        private \ZPC\ApiEnds\Services\TransportService $transportService,
+        private \ZPC\ApiEnds\Services\TelecomService $telecomService
     ) {
         $this->registerShortcodes();
     }
@@ -63,6 +64,11 @@ final readonly class ShortcodeController
         add_shortcode('zupco', [$this, 'renderZupco']);
         add_shortcode('bus-fares', [$this, 'renderBusFares']);
         add_shortcode('transport', [$this, 'renderTransport']);
+
+        // Telecom
+        add_shortcode('netone-bundles', [$this, 'renderNetOneBundles']);
+        add_shortcode('econet-bundles', [$this, 'renderEconetBundles']);
+        add_shortcode('telecel-bundles', [$this, 'renderTelecelBundles']);
     }
 
     public function renderZiGToUSD(array $att = []): string
@@ -268,6 +274,52 @@ final readonly class ShortcodeController
             default:
                 return '<p>' . __('Invalid transport type specified.', 'api-end') . '</p>';
         }
+    }
+
+    public function renderNetOneBundles(array $att = []): string
+    {
+        $atts = shortcode_atts(['type' => 'All', 'filter' => 'none'], $att, 'netone-bundles');
+        $data = $this->telecomService->getNetOneBundles();
+
+        if (empty($data['prices'])) {
+            return '<p>' . __('Unable to retrieve NetOne bundles.', 'api-end') . '</p>';
+        }
+
+        // Legacy templates use functions directly, so we need to include them
+        require_once plugin_dir_path(dirname(__DIR__)) . 'templates/netone.php';
+        require_once plugin_dir_path(dirname(__DIR__)) . 'includes/get-mobile-data-desc.php';
+
+        return build_netone_prices($data['prices'], $data['rates'], $atts['type'], $atts['filter']);
+    }
+
+    public function renderEconetBundles(array $att = []): string
+    {
+        $atts = shortcode_atts(['type' => 'All', 'filter' => 'none'], $att, 'econet-bundles');
+        $data = $this->telecomService->getEconetBundles();
+
+        if (empty($data['prices'])) {
+            return '<p>' . __('Unable to retrieve Econet bundles.', 'api-end') . '</p>';
+        }
+
+        require_once plugin_dir_path(dirname(__DIR__)) . 'templates/econet.php';
+        require_once plugin_dir_path(dirname(__DIR__)) . 'includes/get-mobile-data-desc.php';
+
+        return buildEconetPrices($data['prices'], $data['rates'], $atts['type'], $atts['filter']);
+    }
+
+    public function renderTelecelBundles(array $att = []): string
+    {
+        $atts = shortcode_atts(['type' => 'All', 'filter' => 'none'], $att, 'telecel-bundles');
+        $data = $this->telecomService->getTelecelBundles();
+
+        if (empty($data['prices'])) {
+            return '<p>' . __('Unable to retrieve Telecel bundles.', 'api-end') . '</p>';
+        }
+
+        require_once plugin_dir_path(dirname(__DIR__)) . 'templates/telecel.php';
+        require_once plugin_dir_path(dirname(__DIR__)) . 'includes/get-mobile-data-desc.php';
+
+        return buildTelecelPrices($data['prices'], $data['rates'], $atts['type'], $atts['filter']);
     }
 
     public function renderLatestFuel(array $attr = []): string

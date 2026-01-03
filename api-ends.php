@@ -167,6 +167,7 @@ require_once plugin_dir_path(__FILE__) . 'templates/mbare-report.php';
 
 // require_once plugin_dir_path(__FILE__) . 'shortcodes/utande.php';
 
+/*
 function netone_data_bundles($attr)
 {
     try {
@@ -260,6 +261,7 @@ function telecel_data_bundles($attr)
     }
 }
 add_shortcode('telecel-bundles', 'telecel_data_bundles');
+*/
 /*
 //ZESA tariffs
 function zesa_tariffs($attr)
