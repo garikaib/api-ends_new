@@ -6,9 +6,10 @@
  * @var array $rates_data The rates data.
  */
 
-require_once API_END_BASE . "includes/format-prices.php";
+use ZPC\ApiEnds\Utils\DateUtil;
+use ZPC\ApiEnds\Utils\PriceUtil;
 
-$date = zp_today_full_date();
+$date = DateUtil::todayFull();
 
 // Check if the keys exist and are not zero or undefined
 $petrol_price_zig = isset($fuel_data['prices']['Petrol_ZiG']) && $fuel_data['prices']['Petrol_ZiG'] !== 0 ? $fuel_data['prices']['Petrol_ZiG'] : $fuel_data['prices']['Petrol_USD'] * $rates_data['rates']['ZiG_Mid'];
@@ -17,13 +18,13 @@ $diesel_price_zig = isset($fuel_data['prices']['Diesel_ZiG']) && $fuel_data['pri
 $table_data = [
     [
         'type' => 'Blend Petrol (E10)',
-        'usd' => zp_format_prices($fuel_data['prices']['Petrol_USD'], 'usd'),
-        'zig' => zp_format_prices($petrol_price_zig, 'zig'),
+        'usd' => PriceUtil::format($fuel_data['prices']['Petrol_USD'], 'usd'),
+        'zig' => PriceUtil::format($petrol_price_zig, 'zig'),
     ],
     [
         'type' => 'Diesel 50',
-        'usd' => zp_format_prices($fuel_data['prices']['Diesel_USD'], 'usd'),
-        'zig' => zp_format_prices($diesel_price_zig, 'zig'),
+        'usd' => PriceUtil::format($fuel_data['prices']['Diesel_USD'], 'usd'),
+        'zig' => PriceUtil::format($diesel_price_zig, 'zig'),
     ],
 ];
 ?>
@@ -66,11 +67,11 @@ $table_data = [
                     <?php foreach ($fuel_data['prices']['retail_fuel_prices'] as $station) :
                         $petrol_low = $station['petrol']['low'];
                         $petrol_high = $station['petrol']['high'];
-                        $petrol_display = ($petrol_low == $petrol_high) ? zp_format_prices($petrol_low, 'usd') : zp_format_prices($petrol_low, 'usd') . ' - ' . zp_format_prices($petrol_high, 'usd');
+                        $petrol_display = ($petrol_low == $petrol_high) ? PriceUtil::format($petrol_low, 'usd') : PriceUtil::format($petrol_low, 'usd') . ' - ' . PriceUtil::format($petrol_high, 'usd');
 
                         $diesel_low = $station['diesel']['low'];
                         $diesel_high = $station['diesel']['high'];
-                        $diesel_display = ($diesel_low == $diesel_high) ? zp_format_prices($diesel_low, 'usd') : zp_format_prices($diesel_low, 'usd') . ' - ' . zp_format_prices($diesel_high, 'usd');
+                        $diesel_display = ($diesel_low == $diesel_high) ? PriceUtil::format($diesel_low, 'usd') : PriceUtil::format($diesel_low, 'usd') . ' - ' . PriceUtil::format($diesel_high, 'usd');
                     ?>
                         <tr>
                             <td><?php echo esc_html($station['station']); ?></td>

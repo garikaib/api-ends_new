@@ -20,37 +20,14 @@ class DateSettings
         $safe_state_html = $this->get_legacy_status_html();
 
         Container::make('theme_options', __('Date Management', 'api-end'))
-            ->set_page_parent('zpc-api') // Under Zimpricecheck API
-            ->add_fields([
-                Field::make('separator', 'restore_separator', __('Legacy Import / Restore', 'api-end')),
-                
-                Field::make('html', 'restore_info', __('Restore Information', 'api-end'))
-                    ->set_html('<p>' . __('This tool allows you to restore the "Safe State" – the original list of hardcoded IDs. Use this if the dynamic list becomes corrupted or if you want to reset to defaults.', 'api-end') . '</p>'),
+            ->set_page_parent('zpc-api')
+            
+            // Tab 1: Short Dates (The main list)
+            ->add_tab(__('Short Dates', 'api-end'), [
+                Field::make('html', 'short_dates_intro')
+                    ->set_html('<p><strong>' . __('Manage Simple Date Appending', 'api-end') . '</strong><br>' . __('These posts will have " - [Month] [Year]" appended to their title.', 'api-end') . '</p>'),
 
-                Field::make('html', 'legacy_list_display', __('Safe State (Legacy List)', 'api-end'))
-                    ->set_html($safe_state_html)
-                    ->set_help_text(__('This is the immutable list stored in the plugin code. "Found" means the ID exists on this site.', 'api-end')),
-
-                Field::make('checkbox', 'import_legacy_ids', __('Import Legacy IDs', 'api-end'))
-                    ->set_option_value('yes')
-                    ->set_help_text(__('Check this and save to import the Safe State list into the fields below.', 'api-end')),
-
-                Field::make('radio', 'import_mode', __('Import Mode', 'api-end'))
-                    ->set_options([
-                        'merge' => __('Merge (Add missing Safe State IDs to current list)', 'api-end'),
-                        'overwrite' => __('Overwrite (Replace current list with Safe State IDs)', 'api-end'),
-                    ])
-                    ->set_default_value('merge')
-                    ->set_conditional_logic([
-                        [
-                            'field' => 'import_legacy_ids',
-                            'value' => true,
-                        ]
-                    ]),
-
-                Field::make('separator', 'fields_separator', __('Date Configuration', 'api-end')),
-
-                Field::make('complex', 'short_date_posts', __('Short Date Posts (Month Year)', 'api-end'))
+                Field::make('complex', 'short_date_posts', __('Short Date Posts List', 'api-end'))
                     ->add_fields([
                         Field::make('association', 'post', __('Post/Page', 'api-end'))
                             ->set_types([
@@ -66,14 +43,28 @@ class DateSettings
                             ->set_max(1),
                         Field::make('text', 'manual_id', __('Manual ID (Legacy/Backup)', 'api-end'))
                             ->set_attribute('type', 'number')
-                            ->set_help_text(__('Used if Post selection is empty or for legacy IDs that do not exist on this site.', 'api-end'))
+                            ->set_help_text(__('This ID is used if the "Post/Page" selector is empty (e.g. for deleted posts or test environments).', 'api-end'))
                     ])
                     ->set_layout('tabbed-horizontal')
-                    ->set_header_template('<%- post && post.length > 0 ? "ID: " + post[0].id + " (Attached)" : (manual_id ? "ID: " + manual_id + " (Manual)" : "New Item") %>')
+                    // Logic: If post selected, show Checkmark + ID + Type. If Manual ID only, show Warning + ID.
+                    ->set_header_template('
+                        <% if (post && post.length > 0) { %>
+                            <span style="color: #46b450; font-weight: bold;">&#10003; Active</span> <%- post[0].subtype %>: <%- post[0].id %>
+                        <% } else if (manual_id) { %>
+                            <span style="color: #dc3232; font-weight: bold;">&#9888; Ghost ID</span>: <%- manual_id %>
+                        <% } else { %>
+                            New Item
+                        <% } %>
+                    ')
                     ->set_default_value($legacy_defaults)
-                    ->set_help_text(__('Select posts/pages to append " - [Month] [Year]" to the title.', 'api-end')),
+            ])
 
-                Field::make('complex', 'inflation_date_posts', __('Inflation Date Posts (Range)', 'api-end'))
+            // Tab 2: Inflation Dates
+            ->add_tab(__('Inflation Dates', 'api-end'), [
+                Field::make('html', 'inflation_intro')
+                    ->set_html('<p><strong>' . __('Manage Inflation Date Ranges', 'api-end') . '</strong><br>' . __('These posts will have " (Start Date - Present)" appended.', 'api-end') . '</p>'),
+
+                Field::make('complex', 'inflation_date_posts', __('Inflation Posts List', 'api-end'))
                     ->add_fields([
                         Field::make('association', 'post', __('Post/Page', 'api-end'))
                             ->set_types([
@@ -92,16 +83,38 @@ class DateSettings
                         Field::make('date', 'start_date', __('Start Date', 'api-end'))
                             ->set_storage_format('Y-m-d')
                             ->set_input_format('F j, Y', 'php')
-                            ->set_required(true)
-                            ->set_attribute('placeholder', 'Select start date'),
+                            ->set_required(true),
                             
-                        Field::make('text', 'custom_label_format', __('Custom Label Format (Optional)', 'api-end'))
-                            ->set_help_text(__('Leave empty for default: " (Start Month Year - Current Month Year)"', 'api-end')),
+                        Field::make('text', 'custom_label_format', __('Custom Label Format', 'api-end')),
                     ])
                     ->set_default_value($inflation_defaults)
                     ->set_layout('tabbed-horizontal')
-                    ->set_header_template('<%- post && post.length > 0 ? "ID: " + post[0].id : "New Item" %>') 
+                    ->set_header_template('<%- post && post.length > 0 ? "Inflation Post: " + post[0].id : "New Item" %>')
+            ])
+
+            // Tab 3: Maintenance / Tools
+            ->add_tab(__('Maintenance Tools', 'api-end'), [
+                Field::make('html', 'restore_info', __('Restore Information', 'api-end'))
+                    ->set_html('<p><strong>' . __('Legacy Data Restore', 'api-end') . '</strong><br>' . __('Use this tool to import the hardcoded "Safe State" IDs into the editable lists in the other tabs.', 'api-end') . '</p>'),
+
+                Field::make('html', 'legacy_list_display', __('Safe State Viewer', 'api-end'))
+                    ->set_html($safe_state_html),
+
+                Field::make('separator', 'restore_actions', __('Import Actions', 'api-end')),
+
+                Field::make('radio', 'import_mode', __('Import Mode', 'api-end'))
+                    ->set_options([
+                        'merge' => __('Merge (Add missing IDs to current list)', 'api-end'),
+                        'overwrite' => __('Overwrite (Reset list to Safe State)', 'api-end'),
+                    ])
+                    ->set_default_value('merge'),
+
+                Field::make('html', 'import_button_html')
+                    ->set_html($this->get_import_button_html()),
             ]);
+        
+        // Register AJAX handler
+        add_action('wp_ajax_zpc_import_legacy_dates', [$this, 'ajax_import_legacy']);
     }
 
     public function handle_save()
@@ -283,5 +296,121 @@ class DateSettings
         $html .= '</tbody></table></div>';
         
         return $html;
+    }
+
+    private function get_import_button_html()
+    {
+        $nonce = wp_create_nonce('zpc_import_legacy_dates');
+        
+        return '
+        <div style="margin-top: 15px;">
+            <button type="button" id="zpc-import-legacy-btn" class="button button-primary button-large">
+                ' . __('Import Legacy IDs Now', 'api-end') . '
+            </button>
+            <span id="zpc-import-status" style="margin-left: 10px;"></span>
+        </div>
+        <p class="description">' . __('Click to immediately import the Safe State IDs into the Short Dates list. The page will reload after import.', 'api-end') . '</p>
+        
+        <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $("#zpc-import-legacy-btn").on("click", function() {
+                var $btn = $(this);
+                var $status = $("#zpc-import-status");
+                var mode = $("input[name=\"_import_mode\"]:checked").val() || "merge";
+                
+                $btn.prop("disabled", true);
+                $status.html("<span style=\"color: #0073aa;\">Importing...</span>");
+                
+                $.ajax({
+                    url: ajaxurl,
+                    type: "POST",
+                    data: {
+                        action: "zpc_import_legacy_dates",
+                        mode: mode,
+                        _wpnonce: "' . $nonce . '"
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $status.html("<span style=\"color: #46b450;\">✔ " + response.data.message + "</span>");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            $status.html("<span style=\"color: #dc3232;\">✘ " + response.data.message + "</span>");
+                            $btn.prop("disabled", false);
+                        }
+                    },
+                    error: function() {
+                        $status.html("<span style=\"color: #dc3232;\">✘ AJAX Error</span>");
+                        $btn.prop("disabled", false);
+                    }
+                });
+            });
+        });
+        </script>';
+    }
+
+    public function ajax_import_legacy()
+    {
+        check_ajax_referer('zpc_import_legacy_dates', '_wpnonce');
+        
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => __('Permission denied.', 'api-end')]);
+        }
+
+        $mode = isset($_POST['mode']) ? sanitize_text_field($_POST['mode']) : 'merge';
+        
+        $formatted_legacy_short = $this->get_formatted_legacy_short_dates();
+        $formatted_legacy_inflation = $this->get_formatted_legacy_inflation();
+
+        // 1. Handle Short Dates
+        $current_short_dates = carbon_get_theme_option('short_date_posts') ?: [];
+        
+        if ($mode === 'overwrite') {
+            $new_short_dates = $formatted_legacy_short;
+        } else {
+            $existing_ids = [];
+            foreach ($current_short_dates as $item) {
+                if (!empty($item['manual_id'])) {
+                    $existing_ids[$item['manual_id']] = true;
+                }
+                if (!empty($item['post']) && !empty($item['post'][0]['id'])) {
+                    $existing_ids[$item['post'][0]['id']] = true;
+                }
+            }
+            
+            $new_short_dates = $current_short_dates;
+            foreach ($formatted_legacy_short as $item) {
+                $check_id = $item['manual_id'];
+                if (!isset($existing_ids[$check_id])) {
+                    $new_short_dates[] = $item;
+                }
+            }
+        }
+        carbon_set_theme_option('short_date_posts', $new_short_dates);
+
+        // 2. Handle Inflation Dates
+        $current_inflation = carbon_get_theme_option('inflation_date_posts') ?: [];
+        
+        if ($mode === 'overwrite') {
+            $new_inflation = $formatted_legacy_inflation;
+        } else {
+            $legacy_id = '7647';
+            $exists = false;
+            foreach ($current_inflation as $item) {
+                if (!empty($item['post']) && !empty($item['post'][0]['id']) && $item['post'][0]['id'] == $legacy_id) {
+                    $exists = true;
+                    break;
+                }
+            }
+            if (!$exists && !empty($formatted_legacy_inflation)) {
+                $current_inflation[] = $formatted_legacy_inflation[0];
+            }
+            $new_inflation = $current_inflation;
+        }
+        carbon_set_theme_option('inflation_date_posts', $new_inflation);
+
+        $count = count($new_short_dates);
+        wp_send_json_success(['message' => sprintf(__('Imported %d Short Date entries. Reloading...', 'api-end'), $count)]);
     }
 }

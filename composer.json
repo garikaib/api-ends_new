@@ -1,5 +1,26 @@
 {
+    "name": "zpc/api-ends",
+    "description": "Zimpricecheck API Plugin Modernization",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Garikai Dzoma",
+            "email": "garikai@zimpricecheck.com"
+        }
+    ],
     "require": {
-        "htmlburger/carbon-fields": "^3.6"
+        "php": ">=8.2",
+        "htmlburger/carbon-fields": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "ZPC\\ApiEnds\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
 }

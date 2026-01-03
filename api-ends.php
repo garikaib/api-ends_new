@@ -77,6 +77,16 @@ require_once API_END_BASE . 'includes/Admin/AdminManager.php';
 // Initialize Admin Manager
 new \ZimPriceCheck\ApiEnds\Admin\AdminManager();
 
+// Load Autoloader
+require_once API_END_BASE . 'includes/autoload.php';
+
+// Initialize Modern Architecture
+$zpc_plugin = new \ZPC\ApiEnds\Plugin(
+    API_END_VERSION,
+    API_END_BASE,
+    API_END_URL
+);
+
 require_once API_END_BASE . 'includes/utils/admin-notices.php';
 require_once API_END_BASE . 'includes/class-table-footer.php';
 
@@ -122,7 +132,7 @@ require_once plugin_dir_path(__FILE__) . 'includes/get-ip.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-cached-zimapi.php';
 require_once plugin_dir_path(__FILE__) . 'includes/format-prices.php';
 require_once plugin_dir_path(__FILE__) . 'includes/rates/class-exchange-rates.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-rates.php';
+// require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-rates.php'; // Migrated to ShortcodeController
 
 /**
  * Get and show latest fuel prices.
@@ -130,7 +140,7 @@ require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-rates.php';
  * @return string HTML table of latest fuel prices or error message if unable to retrieve.
  */
 require_once plugin_dir_path(__FILE__) . 'includes/fuel/class-latest-fuel.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-fuel.php';
+// require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-fuel.php'; // Migrated to ShortcodeController
 require_once plugin_dir_path(__FILE__) . 'includes/fuel/class-historical-fuel.php';
 require_once plugin_dir_path(__FILE__) . 'shortcodes/historical-fuel.php';
 
@@ -146,16 +156,16 @@ require_once plugin_dir_path(__FILE__) . 'templates/mbare-report.php';
 
 //Get and show latest Liquid Home Prices
 //Get and show latest Liquid Home Prices
-require_once plugin_dir_path(__FILE__) . 'includes/isp/class-liquid-home.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/liquid-home.php';
+// require_once plugin_dir_path(__FILE__) . 'includes/isp/class-liquid-home.php'; // Migrated to ShortcodeController
+// require_once plugin_dir_path(__FILE__) . 'shortcodes/liquid-home.php';
 //Get and show latest TelOne Prices
 //Get and show latest TelOne Prices
-require_once plugin_dir_path(__FILE__) . 'includes/isp/class-telone.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/telone.php';
+// require_once plugin_dir_path(__FILE__) . 'includes/isp/class-telone.php'; // Migrated to ShortcodeController
+// require_once plugin_dir_path(__FILE__) . 'shortcodes/telone.php';
 
 //Get latest Utande prices and show in tables
 
-require_once plugin_dir_path(__FILE__) . 'shortcodes/utande.php';
+// require_once plugin_dir_path(__FILE__) . 'shortcodes/utande.php';
 
 function netone_data_bundles($attr)
 {

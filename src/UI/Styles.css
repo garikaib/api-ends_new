@@ -1,0 +1,96 @@
+:root {
+    /* Colors */
+    --zpc-primary: #ff5722;
+    --zpc-primary-dark: #e64a19;
+    --zpc-secondary: #263238;
+    --zpc-accent: #ffc107;
+    --zpc-text: #333333;
+    --zpc-text-light: #666666;
+    --zpc-bg: #ffffff;
+    --zpc-bg-alt: #f5f5f5;
+    --zpc-success: #4caf50;
+    --zpc-error: #f44336;
+    --zpc-warning: #ff9800;
+    --zpc-info: #2196f3;
+
+    /* Spacing */
+    --zpc-space-xs: 0.25rem;
+    --zpc-space-sm: 0.5rem;
+    --zpc-space-md: 1rem;
+    --zpc-space-lg: 1.5rem;
+    --zpc-space-xl: 2rem;
+
+    /* Borders */
+    --zpc-radius: 4px;
+    --zpc-border: 1px solid #dddddd;
+
+    /* Shadows */
+    --zpc-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Base Styles */
+.zpc-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    color: var(--zpc-text);
+}
+
+/* Tables */
+.zpc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--zpc-space-md) 0;
+    background: var(--zpc-bg);
+    border-radius: var(--zpc-radius);
+    overflow: hidden;
+    box-shadow: var(--zpc-shadow);
+}
+
+.zpc-table th {
+    background: var(--zpc-secondary);
+    color: white;
+    padding: var(--zpc-space-md);
+    text-align: left;
+    font-weight: 600;
+}
+
+.zpc-table td {
+    padding: var(--zpc-space-md);
+    border-bottom: var(--zpc-border);
+}
+
+.zpc-table tr:last-child td {
+    border-bottom: none;
+}
+
+.zpc-table tr:nth-child(even) {
+    background: var(--zpc-bg-alt);
+}
+
+/* Badges */
+.zpc-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.zpc-badge-success { background: var(--zpc-success); color: white; }
+.zpc-badge-error { background: var(--zpc-error); color: white; }
+.zpc-badge-warning { background: var(--zpc-warning); color: white; }
+
+/* Admin Grid Layout (for Dashboard) */
+.zpc-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--zpc-space-lg);
+    padding: var(--zpc-space-md);
+}
+
+.zpc-card {
+    background: white;
+    padding: var(--zpc-space-lg);
+    border-radius: var(--zpc-radius);
+    box-shadow: var(--zpc-shadow);
+    border: var(--zpc-border);
+}

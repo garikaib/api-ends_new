@@ -14,6 +14,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use ZPC\ApiEnds\Utils\PriceUtil;
+
 $product_table = '';
 $local_currency_header = "Price in ZiG";
 $usd_currency_header = "Price In USD (Official Price)";
@@ -26,6 +28,15 @@ $has_streaming = false;
 $has_priority = false;
 $has_voice = false;
 
+// Helper closure (replacing static method)
+$telone_is_capped = function(string $required, array $product): string {
+    if (empty($product['capped'])) {
+        return "Uncapped";
+    } else {
+        return esc_html($product[$required] ?? '');
+    }
+};
+
 foreach ($prices as $p) {
     if (strtolower($p['last_mile']) === $type) {
         $filtered_packages[] = $p;
@@ -36,7 +47,7 @@ foreach ($prices as $p) {
         if (($p['onnet_minutes'] ?? 0) > 0 || ($p['offnet_minutes'] ?? 0) > 0) $has_voice = true;
     }
     
-    // Determine currency mode (global check, but fine to do here)
+    // Determine currency mode
     if (isset($p['zwl_price']) && $p['zwl_price'] > 0) {
         $currency_mode = 'zwl';
         $local_currency_header = "ZWL Price";
@@ -63,13 +74,13 @@ foreach ($filtered_packages as $product) {
     if ($is_usd_primary) {
         // USD Primary Logic
         $usd_val = $product['usd_price'] ?? 0;
-        $usd_price_display = zp_format_prices($usd_val, "usd");
+        $usd_price_display = PriceUtil::format($usd_val, "usd");
         
         // Estimated ZiG Price
         if ($currency_mode === 'zwg') {
              // Use ZiG_BMBuy for USD -> ZiG conversion
              $est_zig = $usd_val * $zig_bmbuy_rate;
-             $local_price_display = '$' . number_format($est_zig, 0) . ' ZWG';
+             $local_price_display = PriceUtil::format($est_zig, 'zwg', 0);
              $local_currency_header = "Estimated Cost in ZiG";
         } else {
              $local_price_display = 'N/A';
@@ -79,24 +90,24 @@ foreach ($filtered_packages as $product) {
         $local_val = $product['zwg_price'] ?? ($product['zig_price'] ?? 0);
         
         if ($currency_mode === 'zwg') {
-            $local_price_display = '$' . number_format($local_val, 0) . ' ZWG';
+            $local_price_display = PriceUtil::format($local_val, 'zwg', 0);
             $local_currency_header = "Price in ZiG";
         } elseif ($currency_mode === 'zwl') {
             $local_val = $product['zwl_price'] ?? 0;
-            $local_price_display = zp_format_prices($local_val, "zwl");
+            $local_price_display = PriceUtil::format($local_val, "zwl");
             $local_currency_header = "ZWL Price";
         }
 
         // Estimated USD Price
         // Use ZiG_BMSell for ZiG -> USD conversion
         $est_usd = $local_val / $zig_bmsell_rate;
-        $usd_price_display = zp_format_prices($est_usd, "usd");
+        $usd_price_display = PriceUtil::format($est_usd, "usd");
         $usd_currency_header = 'Estimated Price in $USD';
     }
 
     $product_table .= '<tr>';
     $product_table .= '<td>' . esc_html($product['package_name']) . '</td>';
-    $product_table .= '<td>' . ZP_TelOne::telone_is_capped('data', $product) . '</td>';
+    $product_table .= '<td>' . $telone_is_capped('data', $product) . '</td>';
     
     // Night / Other Data Column
     if ($has_streaming || $has_night) {
@@ -108,7 +119,7 @@ foreach ($filtered_packages as $product) {
             if (($product['yt_data'] ?? 0) > 0) $product_table .= '<li>YouTube: ' . esc_html($product['yt_data']) . 'GB</li>';
             $product_table .= '</ul>';
         } else {
-            $product_table .= ZP_TelOne::telone_is_capped('night_data', $product);
+            $product_table .= $telone_is_capped('night_data', $product);
         }
         $product_table .= '</td>';
     }
