@@ -37,7 +37,7 @@ function showNormalBundle(array $bundles, array $rates, string $bundleType, stri
             } elseif ($bundleType === "facebook") {
                 $data_all = $product["fb"];
             }
-            $product_table .= '<tr><td>' . $product['package_name'] . '</td><td>' . zp_format_prices($product['zwl_price']) . '</td><td>' . zp_format_prices(zp_to_usd($rates['rates']['Ecocash'] * 0.95, $product['zwl_price']), "usd") . '</td><td>' . zp_format_data($data_all) . '</td><td>' . to_relative_time($product['validity']) . '</td></tr>';
+            $product_table .= '<tr><td>' . $product['package_name'] . '</td><td>' . zp_format_prices($product['zwl_price']) . '</td><td>' . zp_format_prices(zp_to_usd($rates['rates']['ZiG_Mid'], $product['zwl_price']), "usd") . '</td><td>' . zp_format_data($data_all) . '</td><td>' . to_relative_time($product['validity']) . '</td></tr>';
         }
     }
     return $product_table;
@@ -52,7 +52,7 @@ function showHyBridBundle(array $bundles, array $rates, string $bundleType, stri
         $pos = strpos(strtolower($product["package_name"]), strtolower($filter));
 
         if ($product['description'] === $bundleType && ($pos !== false || $filter === "none")) {
-            $product_table .= '<tr><td>' . $product['package_name'] . '</td><td>' . zp_format_prices($product['zwl_price']) . '</td><td>' . zp_format_prices(zp_to_usd($rates['rates']['Ecocash'] * 0.95, $product['zwl_price']), "usd") . '</td><td>' . zp_what_you_get($product) . '</td><td>' . to_relative_time($product['validity']) . '</td></tr>';
+            $product_table .= '<tr><td>' . $product['package_name'] . '</td><td>' . zp_format_prices($product['zwl_price']) . '</td><td>' . zp_format_prices(zp_to_usd($rates['rates']['ZiG_Mid'], $product['zwl_price']), "usd") . '</td><td>' . zp_what_you_get($product) . '</td><td>' . to_relative_time($product['validity']) . '</td></tr>';
         }
     }
     return $product_table;
@@ -88,7 +88,7 @@ function show_econ_usd_bundle(array $bundles, array $rates, string $bundle_type,
         }
 
         $usd_price = $product['usd_price'];
-        $ecocash_price = $rates['rates']['Ecocash'] * $usd_price;
+        $ecocash_price = $rates['rates']['ZiG_Mid'] * $usd_price;
         $what_you_get = zp_what_you_get($product);
         $validity = to_relative_time($product['validity']);
 
