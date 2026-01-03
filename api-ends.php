@@ -347,16 +347,16 @@ require_once plugin_dir_path(__FILE__) . 'templates/groceries-new.php';
  *
  * @return string HTML table of latest Fine Levels or error message if unable to retrieve.
  */
-require_once plugin_dir_path(__FILE__) . 'includes/fines/class-fine-levels.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/fine-levels.php';
+// require_once plugin_dir_path(__FILE__) . 'includes/fines/class-fine-levels.php';
+// require_once plugin_dir_path(__FILE__) . 'shortcodes/fine-levels.php';
 
 /**
  * Get and show Traffic Fines.
  *
  * @return string HTML table of Traffic Fines or error message if unable to retrieve.
  */
-require_once plugin_dir_path(__FILE__) . 'includes/fines/class-traffic-fines.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/traffic-fines.php';
+// require_once plugin_dir_path(__FILE__) . 'includes/fines/class-traffic-fines.php';
+// require_once plugin_dir_path(__FILE__) . 'shortcodes/traffic-fines.php';
 
 
 /*
@@ -433,6 +433,7 @@ add_shortcode('passport-fees', 'zp_govt_passports');
 // require_once plugin_dir_path(__FILE__) . 'shortcodes/zig-usd.php';
 // require_once plugin_dir_path(__FILE__) . 'includes/rates/class-usd-zig.php';
 // require_once plugin_dir_path(__FILE__) . 'shortcodes/usd-zig.php';
+/*
 function zp_zig_usd_withdrawal_limits($attr)
 {
     try {
@@ -451,6 +452,7 @@ function zp_zig_usd_withdrawal_limits($attr)
     }
 }
 add_shortcode('zig-limits', 'zp_zig_usd_withdrawal_limits');
+*/
 // Get and show latest ZBC License Fees
 require_once API_END_BASE . 'templates/zbc-licences.php';
 

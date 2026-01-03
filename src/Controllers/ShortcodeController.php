@@ -24,7 +24,8 @@ final readonly class ShortcodeController
         private \ZPC\ApiEnds\Services\ZesaService $zesaService,
         private \ZPC\ApiEnds\Services\ConsumerGoodsService $consumerGoodsService,
         private \ZPC\ApiEnds\Services\TransportService $transportService,
-        private \ZPC\ApiEnds\Services\TelecomService $telecomService
+        private \ZPC\ApiEnds\Services\TelecomService $telecomService,
+        private \ZPC\ApiEnds\Services\FinesService $finesService
     ) {
         $this->registerShortcodes();
     }
@@ -69,6 +70,14 @@ final readonly class ShortcodeController
         add_shortcode('netone-bundles', [$this, 'renderNetOneBundles']);
         add_shortcode('econet-bundles', [$this, 'renderEconetBundles']);
         add_shortcode('telecel-bundles', [$this, 'renderTelecelBundles']);
+
+        // Financial
+        add_shortcode('zig-limits', [$this, 'renderZigLimits']);
+
+        // Fines
+        add_shortcode('fine-levels', [$this, 'renderFineLevels']);
+        add_shortcode('govt-fines', [$this, 'renderFineLevels']); // Alias
+        add_shortcode('traffic-fines', [$this, 'renderTrafficFines']);
     }
 
     public function renderZiGToUSD(array $att = []): string
@@ -320,6 +329,51 @@ final readonly class ShortcodeController
         require_once plugin_dir_path(dirname(__DIR__)) . 'includes/get-mobile-data-desc.php';
 
         return buildTelecelPrices($data['prices'], $data['rates'], $atts['type'], $atts['filter']);
+    }
+
+    public function renderZigLimits(array $att = []): string
+    {
+        $data = $this->ratesService->getLatestRates();
+
+        if (empty($data)) {
+            return '<p>' . __('Unable to retrieve ZiG withdrawal limits.', 'api-end') . '</p>';
+        }
+
+        require_once plugin_dir_path(dirname(__DIR__)) . 'templates/zig-withdrawal-limits.php';
+        return build_zig_withdrawal_limits_table($data);
+    }
+
+    public function renderFineLevels(array $att = []): string
+    {
+        $data = $this->finesService->getFineLevels();
+
+        if (empty($data['fines']) || empty($data['rates'])) {
+            return '<p>' . __('Unable to retrieve fine levels.', 'api-end') . '</p>';
+        }
+
+        // The legacy template expects specific data structure
+        $fines_data = $data['fines']['data'] ?? $data['fines'];
+        $rates_data = $data['rates']['data'] ?? $data['rates'];
+
+        ob_start();
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/fine-levels-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderTrafficFines(array $att = []): string
+    {
+        $atts = shortcode_atts(['type' => null], $att, 'traffic-fines');
+        $data = $this->finesService->getTrafficFines();
+
+        if (empty($data)) {
+            return '<p>' . __('Unable to retrieve traffic fines.', 'api-end') . '</p>';
+        }
+
+        $type = $atts['type'];
+
+        ob_start();
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/traffic-fines-table.php';
+        return ob_get_clean();
     }
 
     public function renderLatestFuel(array $attr = []): string
