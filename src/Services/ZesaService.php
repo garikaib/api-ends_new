@@ -15,6 +15,22 @@ class ZesaService {
         $prices = $this->api->get('v2/prices/zesa');
         $rates = $this->api->get('v2/rates/fx-rates');
 
+        // Calculate ZiG prices if missing (V2 API only sends USD)
+        if (!empty($prices['prices']['bands']) && !empty($rates['rates']['ZiG_Mid'])) {
+            $zig_mid = (float) $rates['rates']['ZiG_Mid'];
+            foreach ($prices['prices']['bands'] as &$band) {
+                if (isset($band['usd_price'])) {
+                    $band['zig_price'] = $band['usd_price'] * $zig_mid;
+                }
+                if (isset($band['usd_price_rea'])) {
+                    $band['zig_price_rea'] = $band['usd_price_rea'] * $zig_mid;
+                } elseif (isset($band['zig_price'])) {
+                    // Fallback calculation for REA (6% levy)
+                     $band['zig_price_rea'] = $band['zig_price'] * 1.06;
+                }
+            }
+        }
+
         return [
             'prices' => $prices,
             'rates' => $rates
