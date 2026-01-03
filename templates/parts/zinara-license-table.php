@@ -30,6 +30,7 @@ if (!function_exists('zp_calculate_license_fee')) {
 
 ?>
 
+<div class="fuel-prices-table">
 <figure class='wp-block-table'>
     <table>
         <thead>
@@ -65,6 +66,7 @@ if (!function_exists('zp_calculate_license_fee')) {
         </tbody>
     </table>
 </figure>
+</div>
 
 <?php 
 if (function_exists('zp_show_footer')) {

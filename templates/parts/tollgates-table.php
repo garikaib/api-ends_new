@@ -38,6 +38,7 @@ $caption = $is_premium
 
 ?>
 
+<div class="fuel-prices-table">
 <h4><?php echo $title; ?></h4>
 <figure class="wp-block-table">
     <table>
@@ -79,6 +80,7 @@ $caption = $is_premium
 <?php if (!empty($rates['rates']['updatedAt'])): ?>
     <p><strong>Last Updated on <?php echo htmlspecialchars($rates['rates']['updatedAt']); ?></strong></p>
 <?php endif; ?>
+</div>
 
 <?php 
 if (function_exists('zp_show_footer')) {

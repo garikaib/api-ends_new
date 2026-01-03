@@ -17,6 +17,7 @@ require_once API_END_BASE . "includes/dates.php";
 
 ?>
 
+<div class="fuel-prices-table">
 <h4>Zimbabwe Intercity Bus Fares on <?php echo htmlspecialchars(zp_today_full_date()); ?></h4>
 <figure class='wp-block-table'>
     <table>
@@ -51,3 +52,4 @@ require_once API_END_BASE . "includes/dates.php";
 <?php if (!empty($rates['rates']['updatedAt'])): ?>
     <p><strong>Last Updated on <?php echo htmlspecialchars($rates['rates']['updatedAt']); ?></strong></p>
 <?php endif; ?>
+</div>

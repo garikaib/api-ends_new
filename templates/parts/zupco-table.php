@@ -19,6 +19,7 @@ $zig_rate = isset($rates["rates"]["ZiG_Mid"]) ? $rates["rates"]["ZiG_Mid"] : 0;
 
 ?>
 
+<div class="fuel-prices-table">
 <h4>ZUPCO Fares Table on <?php echo htmlspecialchars(zp_today_full_date()); ?></h4>
 <figure class='wp-block-table'>
     <table>
@@ -55,6 +56,7 @@ $zig_rate = isset($rates["rates"]["ZiG_Mid"]) ? $rates["rates"]["ZiG_Mid"] : 0;
 <?php if (!empty($rates['rates']['updatedAt'])): ?>
     <p><strong>Last Updated on <?php echo htmlspecialchars($rates['rates']['updatedAt']); ?></strong></p>
 <?php endif; ?>
+</div>
 
 <?php 
 if (function_exists('zp_show_footer')) {
