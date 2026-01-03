@@ -110,6 +110,8 @@ foreach ($units_to_show as $u) {
 <p>This quota is restored on the first day of each month. This means that if you bought up all your <?php echo $discounted_units; ?> kWh in <?php echo $current_month; ?> from <?php echo $next_month_first; ?> you can now buy that <?php echo $discounted_units; ?> kWh at <?php echo PriceUtil::format($cheap_total_zig, 'zig'); ?> (<?php echo PriceUtil::format($cheap_total_usd, 'usd'); ?>).</p>
 
 <h4>What is a stepped tariff?</h4>
+<p>ZESA no longer uses a flat tariff. Instead, they now use a stepped tariff system. With a stepped tariff, the first few units you buy are charged at a lower rate. As you consume more electricity, you move into higher-priced bands. The table below shows what you would pay for common usage amounts:</p>
+
 <div class="fuel-prices-table">
 <figure class='wp-block-table'>
     <table>
@@ -123,6 +125,5 @@ foreach ($units_to_show as $u) {
 </figure>
 </div>
 
-<p>ZESA does not use a flat tariff like it used to. Instead, they use a stepped tariff. What this means is that the first few units you buy are cheaper.</p>
 <h4>I am still confused how many units will I get if I spend this much?</h4>
 <p>How much you will get depends on how much electricity you have already bought in that particular month. If this is your first time buying electricity that month you will get electricity at a cheaper rate.<a href='https://zimpricecheck.com/price-updates/zesa-tariff-and-token-calculator/'> You can use our ZESA calculator here to know exactly how many units you will get.</a></p>
