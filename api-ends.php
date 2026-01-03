@@ -260,6 +260,7 @@ function telecel_data_bundles($attr)
     }
 }
 add_shortcode('telecel-bundles', 'telecel_data_bundles');
+/*
 //ZESA tariffs
 function zesa_tariffs($attr)
 {
@@ -284,6 +285,7 @@ function zesa_tariffs($attr)
     }
 }
 add_shortcode('zesa-tariffs', 'zesa_tariffs');
+*/
 //Delta Alcohol
 function zp_drink_prices($attr)
 {

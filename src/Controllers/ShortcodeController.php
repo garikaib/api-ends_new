@@ -20,7 +20,8 @@ final readonly class ShortcodeController
         private RatesService $ratesService,
         private FuelService $fuelService,
         private IspService $ispService,
-        private \ZPC\ApiEnds\Services\GovtService $govtService
+        private \ZPC\ApiEnds\Services\GovtService $govtService,
+        private \ZPC\ApiEnds\Services\ZesaService $zesaService
     ) {
         $this->registerShortcodes();
     }
@@ -47,6 +48,9 @@ final readonly class ShortcodeController
         add_shortcode('passport-fees', [$this, 'renderPassportFees']);
         add_shortcode('births-deaths', [$this, 'renderBirthDeathFees']);
         add_shortcode('citizen-status', [$this, 'renderCitizenStatusFees']);
+
+        // Utility
+        add_shortcode('zesa-tariffs', [$this, 'renderZesaTariffs']);
     }
 
     public function renderZiGToUSD(array $att = []): string
@@ -128,6 +132,29 @@ final readonly class ShortcodeController
 
         ob_start();
         include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/govt-fees-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderZesaTariffs(array $att = []): string
+    {
+        $atts = shortcode_atts(['type' => 'tariffs'], $att, 'zesa-tariffs');
+        $data = $this->zesaService->getTariffs();
+
+        if (empty($data['prices']) || empty($data['rates'])) {
+            return '<p>' . __('Unable to retrieve ZESA tariffs.', 'api-end') . '</p>';
+        }
+
+        ob_start();
+        // Variables for templates are extracted from $data inside the template or passed here.
+        // My templates expects $data variable available.
+        
+        $type = strtolower($atts['type']);
+        if ($type === 'exp') {
+            $zesaService = $this->zesaService; // Pass service instance for calculations in template
+            include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/zesa-explanation.php';
+        } else {
+            include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/zesa-tariffs-table.php';
+        }
         return ob_get_clean();
     }
 
