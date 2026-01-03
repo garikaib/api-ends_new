@@ -22,7 +22,8 @@ final readonly class ShortcodeController
         private IspService $ispService,
         private \ZPC\ApiEnds\Services\GovtService $govtService,
         private \ZPC\ApiEnds\Services\ZesaService $zesaService,
-        private \ZPC\ApiEnds\Services\ConsumerGoodsService $consumerGoodsService
+        private \ZPC\ApiEnds\Services\ConsumerGoodsService $consumerGoodsService,
+        private \ZPC\ApiEnds\Services\TransportService $transportService
     ) {
         $this->registerShortcodes();
     }
@@ -55,6 +56,10 @@ final readonly class ShortcodeController
 
         // Consumer Goods
         add_shortcode('drink-prices', [$this, 'renderDrinkPrices']);
+
+        // Transport
+        add_shortcode('tollgates', [$this, 'renderTollgates']);
+        add_shortcode('zinara-license', [$this, 'renderZinaraLicense']);
     }
 
     public function renderZiGToUSD(array $att = []): string
@@ -173,6 +178,40 @@ final readonly class ShortcodeController
 
         ob_start();
         include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/drinks-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderTollgates(array $att = []): string
+    {
+        $atts = shortcode_atts(['type' => 'standard'], $att, 'tollgates');
+        $data = $this->transportService->getTollgates();
+
+        if (empty($data['prices'])) {
+            return '<p>' . __('Unable to retrieve tollgate prices.', 'api-end') . '</p>';
+        }
+
+        ob_start();
+        $prices = $data['prices'];
+        $rates = $data['rates'];
+        $type = strtolower($atts['type']);
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/tollgates-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderZinaraLicense(array $att = []): string
+    {
+        $atts = shortcode_atts(['currency' => 'zig'], $att, 'zinara-license');
+        $data = $this->transportService->getZinaraLicense();
+
+        if (empty($data['prices'])) {
+            return '<p>' . __('Unable to retrieve Zinara License fees.', 'api-end') . '</p>';
+        }
+
+        ob_start();
+        $prices = $data['prices'];
+        $rates = $data['rates'];
+        $currency = strtolower($atts['currency']);
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/zinara-license-table.php';
         return ob_get_clean();
     }
 

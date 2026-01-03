@@ -324,10 +324,10 @@ add_shortcode('drink-prices', 'zp_drink_prices');
 
 //Transport and ZINARA
 
-require_once plugin_dir_path(__FILE__) . 'includes/transport/class-tollgates.php';
-new ZP_Tollgates();
-require_once plugin_dir_path(__FILE__) . 'includes/transport/class-zinara-license.php';
-new ZP_Zinara_License();
+// require_once plugin_dir_path(__FILE__) . 'includes/transport/class-tollgates.php';
+// new ZP_Tollgates();
+// require_once plugin_dir_path(__FILE__) . 'includes/transport/class-zinara-license.php';
+// new ZP_Zinara_License();
 require_once plugin_dir_path(__FILE__) . 'includes/transport/class-zupco.php';
 new ZP_Zupco();
 require_once plugin_dir_path(__FILE__) . 'includes/transport/class-bus-fares.php';
