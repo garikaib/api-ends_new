@@ -19,7 +19,8 @@ final readonly class ShortcodeController
         private ApiService $apiService,
         private RatesService $ratesService,
         private FuelService $fuelService,
-        private IspService $ispService
+        private IspService $ispService,
+        private \ZPC\ApiEnds\Services\GovtService $govtService
     ) {
         $this->registerShortcodes();
     }
@@ -41,6 +42,11 @@ final readonly class ShortcodeController
         // Rates Converters
         add_shortcode('zig-usd', [$this, 'renderZiGToUSD']);
         add_shortcode('usd-zig', [$this, 'renderUSDToZiG']);
+
+        // Govt Fees
+        add_shortcode('passport-fees', [$this, 'renderPassportFees']);
+        add_shortcode('births-deaths', [$this, 'renderBirthDeathFees']);
+        add_shortcode('citizen-status', [$this, 'renderCitizenStatusFees']);
     }
 
     public function renderZiGToUSD(array $att = []): string
@@ -68,6 +74,60 @@ final readonly class ShortcodeController
 
         ob_start();
         include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/usd-zig-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderPassportFees(array $attr = []): string
+    {
+        $data = $this->govtService->getPassportFees();
+        if (empty($data['fees']) || empty($data['rates'])) {
+            return '<p>' . __('Unable to retrieve passport fees.', 'api-end') . '</p>';
+        }
+
+        $fees_data = $data['fees']['prices']['fees'] ?? [];
+        $rates = $data['rates'] ?? [];
+        $updated_at = $data['fees']['prices']['updatedAt'] ?? 'N/A';
+        $title = 'Current Passport Application Fees';
+        $caption = 'Passport Application Fees';
+
+        ob_start();
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/govt-fees-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderBirthDeathFees(array $attr = []): string
+    {
+        $data = $this->govtService->getBirthDeathFees();
+        if (empty($data['fees']) || empty($data['rates'])) {
+            return '<p>' . __('Unable to retrieve birth/death fees.', 'api-end') . '</p>';
+        }
+
+        $fees_data = $data['fees']['prices']['fees'] ?? [];
+        $rates = $data['rates'] ?? [];
+        $updated_at = $data['fees']['prices']['updatedAt'] ?? 'N/A';
+        $title = 'National, Birth and Death Registration Fees';
+        $caption = 'Birth and Death Certificate Fees';
+
+        ob_start();
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/govt-fees-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderCitizenStatusFees(array $attr = []): string
+    {
+        $data = $this->govtService->getCitizenStatusFees();
+        if (empty($data['fees']) || empty($data['rates'])) {
+            return '<p>' . __('Unable to retrieve citizen status fees.', 'api-end') . '</p>';
+        }
+
+        $fees_data = $data['fees']['prices']['fees'] ?? [];
+        $rates = $data['rates'] ?? [];
+        $updated_at = $data['fees']['prices']['updatedAt'] ?? 'N/A';
+        $title = 'Citizen Status Fees';
+        $caption = 'Citizen Status Fees';
+
+        ob_start();
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/govt-fees-table.php';
         return ob_get_clean();
     }
 

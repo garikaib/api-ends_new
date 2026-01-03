@@ -19,6 +19,7 @@ final class Plugin
     private RatesService $ratesService;
     private Services\FuelService $fuelService;
     private Services\IspService $ispService;
+    private Services\GovtService $govtService;
     private HistoricalRatesService $historicalRatesService;
 
     public function __construct(
@@ -30,6 +31,7 @@ final class Plugin
         $this->ratesService = new Services\RatesService($this->apiService);
         $this->fuelService = new Services\FuelService($this->apiService);
         $this->ispService = new Services\IspService($this->apiService); // New Service
+        $this->govtService = new Services\GovtService($this->apiService);
         $this->historicalRatesService = new Services\HistoricalRatesService($this->apiService);
         
         $this->init();
@@ -46,7 +48,7 @@ final class Plugin
         }
 
         // Initialize Controllers
-        new Controllers\ShortcodeController($this->apiService, $this->ratesService, $this->fuelService, $this->ispService);
+        new Controllers\ShortcodeController($this->apiService, $this->ratesService, $this->fuelService, $this->ispService, $this->govtService);
 
         add_action('init', [$this, 'onInit']);
     }

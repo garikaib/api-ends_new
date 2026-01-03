@@ -353,6 +353,7 @@ require_once plugin_dir_path(__FILE__) . 'includes/fines/class-traffic-fines.php
 require_once plugin_dir_path(__FILE__) . 'shortcodes/traffic-fines.php';
 
 
+/*
 function zp_govt_births($attr)
 {
     try {
@@ -421,6 +422,7 @@ function zp_govt_passports($attr)
     }
 }
 add_shortcode('passport-fees', 'zp_govt_passports');
+*/
 // require_once plugin_dir_path(__FILE__) . 'includes/rates/class-zig-usd.php';
 // require_once plugin_dir_path(__FILE__) . 'shortcodes/zig-usd.php';
 // require_once plugin_dir_path(__FILE__) . 'includes/rates/class-usd-zig.php';
