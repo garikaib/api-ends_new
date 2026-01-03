@@ -328,12 +328,12 @@ add_shortcode('drink-prices', 'zp_drink_prices');
 // new ZP_Tollgates();
 // require_once plugin_dir_path(__FILE__) . 'includes/transport/class-zinara-license.php';
 // new ZP_Zinara_License();
-require_once plugin_dir_path(__FILE__) . 'includes/transport/class-zupco.php';
-new ZP_Zupco();
-require_once plugin_dir_path(__FILE__) . 'includes/transport/class-bus-fares.php';
-new ZP_Bus_Fares();
-require_once plugin_dir_path(__FILE__) . 'includes/transport/class-transport.php';
-new ZP_Transport();
+// require_once plugin_dir_path(__FILE__) . 'includes/transport/class-zupco.php';
+// new ZP_Zupco();
+// require_once plugin_dir_path(__FILE__) . 'includes/transport/class-bus-fares.php';
+// new ZP_Bus_Fares();
+// require_once plugin_dir_path(__FILE__) . 'includes/transport/class-transport.php';
+// new ZP_Transport();
 
 //Grocery Prices
 

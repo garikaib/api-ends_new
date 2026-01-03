@@ -60,6 +60,9 @@ final readonly class ShortcodeController
         // Transport
         add_shortcode('tollgates', [$this, 'renderTollgates']);
         add_shortcode('zinara-license', [$this, 'renderZinaraLicense']);
+        add_shortcode('zupco', [$this, 'renderZupco']);
+        add_shortcode('bus-fares', [$this, 'renderBusFares']);
+        add_shortcode('transport', [$this, 'renderTransport']);
     }
 
     public function renderZiGToUSD(array $att = []): string
@@ -213,6 +216,58 @@ final readonly class ShortcodeController
         $currency = strtolower($atts['currency']);
         include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/zinara-license-table.php';
         return ob_get_clean();
+    }
+
+    public function renderZupco(array $att = []): string
+    {
+        $data = $this->transportService->getZupcoFares();
+
+        if (empty($data['prices'])) {
+            return '<p>' . __('Unable to retrieve ZUPCO fares.', 'api-end') . '</p>';
+        }
+
+        ob_start();
+        $prices = $data['prices'];
+        $rates = $data['rates'];
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/zupco-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderBusFares(array $att = []): string
+    {
+        $data = $this->transportService->getBusFares();
+
+        if (empty($data['prices'])) {
+            return '<p>' . __('Unable to retrieve Bus Fares.', 'api-end') . '</p>';
+        }
+
+        ob_start();
+        $prices = $data['prices'];
+        $rates = $data['rates'];
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/bus-fares-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderTransport(array $att = []): string
+    {
+        // Delegator shortcode: routes to specific transport shortcodes based on type
+        $atts = shortcode_atts(['type' => 'zupco'], $att, 'transport');
+        $type = strtolower($atts['type']);
+
+        switch ($type) {
+            case 'zupco':
+                return $this->renderZupco([]);
+            case 'busfares':
+                return $this->renderBusFares([]);
+            case 'tollgates':
+                return $this->renderTollgates(['type' => 'standard']);
+            case 'tollgates_prem':
+                return $this->renderTollgates(['type' => 'premium']);
+            case 'zinara':
+                return $this->renderZinaraLicense(['currency' => 'zig']);
+            default:
+                return '<p>' . __('Invalid transport type specified.', 'api-end') . '</p>';
+        }
     }
 
     public function renderLatestFuel(array $attr = []): string
