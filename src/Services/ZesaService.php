@@ -41,9 +41,9 @@ class ZesaService {
 
         $total_cost = 0;
         foreach ($bands as $band) {
-            $min_units = $band['min_units'];
-            $max_units = $band['max_units'];
-            $price = $band['zig_price_rea'];
+            $min_units = $band['min_units'] ?? 0;
+            $max_units = $band['max_units'] ?? 0;
+            $price = $band['zig_price_rea'] ?? $band['zig_price'] ?? 0;
 
             $band_range = $max_units - $min_units;
             $band_units = ($units <= $band_range) ? $units : $band_range;
@@ -96,8 +96,8 @@ class ZesaService {
         foreach ($bands as $band) {
             // Sum all except the last band
             if ($count < ($band_count - 1)) {
-                $units = $band['max_units'] - $band['min_units'];
-                $total_cost += $units * $band['zig_price_rea'];
+                $units = ($band['max_units'] ?? 0) - ($band['min_units'] ?? 0);
+                $total_cost += $units * ($band['zig_price_rea'] ?? $band['zig_price'] ?? 0);
                 $count++;
             }
         }
@@ -115,20 +115,20 @@ class ZesaService {
         $bands = $data['prices']['bands'] ?? [];
         if (empty($bands)) return [];
 
-        usort($bands, fn($a, $b) => $a['min_units'] - $b['min_units']);
+        usort($bands, fn($a, $b) => ($a['min_units'] ?? 0) - ($b['min_units'] ?? 0));
         $band_totals = [];
         $cumulative_total = 0;
 
         // Iterate over all but the last band
         for ($i = 0; $i < count($bands) - 1; $i++) {
             $band = $bands[$i];
-            $total_units = $band['max_units'] - $band['min_units'];
+            $total_units = ($band['max_units'] ?? 0) - ($band['min_units'] ?? 0);
             $cumulative_total += $total_units;
 
             $band_totals[$i] = [
                 'total_units' => $total_units,
                 'cumulative_total' => $cumulative_total,
-                'zig_price_rea' => $band['zig_price_rea'],
+                'zig_price_rea' => $band['zig_price_rea'] ?? $band['zig_price'] ?? 0,
             ];
         }
 
@@ -149,7 +149,9 @@ class ZesaService {
         $min_rea = PHP_FLOAT_MAX;
         foreach ($bands as $band) {
             if (empty($band['zig_price'])) continue;
-            $rea = $band['zig_price_rea'] / $band['zig_price'];
+            $zig_rea = $band['zig_price_rea'] ?? $band['zig_price'] ?? 0;
+            if ($zig_rea == 0) continue;
+            $rea = $zig_rea / $band['zig_price'];
             if ($rea < $min_rea) {
                 $min_rea = $rea;
             }
