@@ -1,13 +1,7 @@
-<?php
-/**
- * Template part for displaying ZiG to USD conversion table.
- *
- * @var array $rates The rates data.
- * @var array $oe_array The official exchange rates array.
- */
+use ZPC\ApiEnds\Utils\DateUtil;
+use ZPC\ApiEnds\Utils\PriceUtil;
 
-$date = new DateTime('now', new DateTimeZone('Africa/Harare'));
-$formatted_date = $date->format('l, j F Y');
+$formatted_date = DateUtil::todayFull();
 
 $zig_notes = [
     1 => '1 ZiG',
@@ -23,21 +17,21 @@ $zig_notes = [
 $table_rows = '';
 foreach ($zig_notes as $value => $note) {
     // Calculate equivalent value in USD
-    $usd_equivalent = number_format($value / $rates['rates']['ZiG_Mid'], 2, '.', ' ');
+    $usd_equivalent = $value / ($rates['rates']['ZiG_Mid'] ?? 1); // Avoid div by zero if missing
 
     // Calculate equivalent value in Rand (ZAR)
-    $zar_equivalent = number_format(($usd_equivalent) * $oe_array['ZAR'], 2, '.', ' ');
+    $zar_equivalent = $usd_equivalent * ($oe_array['ZAR'] ?? 0);
 
     // Calculate equivalent value in GBP
-    $gbp_equivalent = number_format(($usd_equivalent) * $oe_array['GBP'], 2, '.', ' ');
+    $gbp_equivalent = $usd_equivalent * ($oe_array['GBP'] ?? 0);
 
     // Add row to the table
     $table_rows .= '
         <tr>
-            <td>' . wp_kses_post($note) . '</td>
-            <td>US$' . wp_kses_post($usd_equivalent) . '</td>
-            <td>R' . wp_kses_post($zar_equivalent) . '</td>
-            <td>£' . wp_kses_post($gbp_equivalent) . '</td>
+            <td>' . esc_html($note) . '</td>
+            <td>' . PriceUtil::format($usd_equivalent, 'usd') . '</td>
+            <td>R' . number_format($zar_equivalent, 2, '.', ' ') . '</td>
+            <td>£' . number_format($gbp_equivalent, 2, '.', ' ') . '</td>
         </tr>
     ';
 }

@@ -37,6 +37,38 @@ final readonly class ShortcodeController
         add_shortcode('liquid-home', [$this, 'renderLiquidHome']);
         add_shortcode('telone', [$this, 'renderTelOne']);
         add_shortcode('utande', [$this, 'renderUtande']);
+
+        // Rates Converters
+        add_shortcode('zig-usd', [$this, 'renderZiGToUSD']);
+        add_shortcode('usd-zig', [$this, 'renderUSDToZiG']);
+    }
+
+    public function renderZiGToUSD(array $att = []): string
+    {
+        $rates = $this->ratesService->getLatestRates();
+        $oe_rates = $this->ratesService->getOfficialRates();
+
+        if (empty($rates) || empty($oe_rates)) {
+            return '<p>' . __('Unable to retrieve conversion rates at this time.', 'api-end') . '</p>';
+        }
+
+        ob_start();
+        $oe_array = $oe_rates; // Template expects $oe_array
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/zig-usd-table.php';
+        return ob_get_clean();
+    }
+
+    public function renderUSDToZiG(array $att = []): string
+    {
+        $rates = $this->ratesService->getLatestRates();
+
+        if (empty($rates)) {
+            return '<p>' . __('Unable to retrieve conversion rates at this time.', 'api-end') . '</p>';
+        }
+
+        ob_start();
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/usd-zig-table.php';
+        return ob_get_clean();
     }
 
     public function renderLatestFuel(array $attr = []): string

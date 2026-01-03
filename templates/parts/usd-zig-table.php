@@ -1,12 +1,7 @@
-<?php
-/**
- * Template part for displaying USD to ZiG conversion table.
- *
- * @var array $rates The rates data.
- */
+use ZPC\ApiEnds\Utils\DateUtil;
+use ZPC\ApiEnds\Utils\PriceUtil;
 
-$date = new DateTime('now', new DateTimeZone('Africa/Harare'));
-$formatted_date = $date->format('l, j F Y');
+$formatted_date = DateUtil::todayFull();
 
 $zig_notes = [
     1 => 'US$1 Note',
@@ -21,21 +16,21 @@ $zig_notes = [
 $table_rows = '';
 foreach ($zig_notes as $value => $note) {
     // Calculate equivalent value in USD (Official)
-    $official_value = number_format($value * $rates['rates']['ZiG_Mid'], 2, '.', ' ');
+    $official_value = $value * ($rates['rates']['ZiG_Mid'] ?? 0);
     
     // Calculate street value (Selling USD - what you get)
-    $street_sell_value = number_format($value * $rates['rates']['ZiG_BMSell'], 2, '.', ' ');
+    $street_sell_value = $value * ($rates['rates']['ZiG_BMSell'] ?? 0);
 
     // Calculate street cost (Buying USD - what you pay)
-    $street_buy_cost = number_format($value * $rates['rates']['ZiG_BMBuy'], 2, '.', ' ');
+    $street_buy_cost = $value * ($rates['rates']['ZiG_BMBuy'] ?? 0);
 
     // Add row to the table
     $table_rows .= '
         <tr>
-            <td>' . wp_kses_post($note) . '</td>
-            <td>' . wp_kses_post($official_value) . ' ZiG</td>
-            <td>' . wp_kses_post($street_sell_value) . ' ZiG</td>
-            <td>' . wp_kses_post($street_buy_cost) . ' ZiG</td>
+            <td>' . esc_html($note) . '</td>
+            <td>' . PriceUtil::format($official_value, 'zig') . '</td>
+            <td>' . PriceUtil::format($street_sell_value, 'zig') . '</td>
+            <td>' . PriceUtil::format($street_buy_cost, 'zig') . '</td>
         </tr>
     ';
 }

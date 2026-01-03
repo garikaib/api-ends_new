@@ -421,10 +421,10 @@ function zp_govt_passports($attr)
     }
 }
 add_shortcode('passport-fees', 'zp_govt_passports');
-require_once plugin_dir_path(__FILE__) . 'includes/rates/class-zig-usd.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/zig-usd.php';
-require_once plugin_dir_path(__FILE__) . 'includes/rates/class-usd-zig.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/usd-zig.php';
+// require_once plugin_dir_path(__FILE__) . 'includes/rates/class-zig-usd.php';
+// require_once plugin_dir_path(__FILE__) . 'shortcodes/zig-usd.php';
+// require_once plugin_dir_path(__FILE__) . 'includes/rates/class-usd-zig.php';
+// require_once plugin_dir_path(__FILE__) . 'shortcodes/usd-zig.php';
 function zp_zig_usd_withdrawal_limits($attr)
 {
     try {
