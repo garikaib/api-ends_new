@@ -21,7 +21,8 @@ final readonly class ShortcodeController
         private FuelService $fuelService,
         private IspService $ispService,
         private \ZPC\ApiEnds\Services\GovtService $govtService,
-        private \ZPC\ApiEnds\Services\ZesaService $zesaService
+        private \ZPC\ApiEnds\Services\ZesaService $zesaService,
+        private \ZPC\ApiEnds\Services\ConsumerGoodsService $consumerGoodsService
     ) {
         $this->registerShortcodes();
     }
@@ -51,6 +52,9 @@ final readonly class ShortcodeController
 
         // Utility
         add_shortcode('zesa-tariffs', [$this, 'renderZesaTariffs']);
+
+        // Consumer Goods
+        add_shortcode('drink-prices', [$this, 'renderDrinkPrices']);
     }
 
     public function renderZiGToUSD(array $att = []): string
@@ -155,6 +159,20 @@ final readonly class ShortcodeController
         } else {
             include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/zesa-tariffs-table.php';
         }
+        return ob_get_clean();
+    }
+
+    public function renderDrinkPrices(array $att = []): string
+    {
+        // Currently only supports 'deltaa' type
+        $data = $this->consumerGoodsService->getDeltaAlcohol();
+
+        if (empty($data['prices']) || empty($data['rates'])) {
+            return '<p>' . __('Unable to retrieve drink prices.', 'api-end') . '</p>';
+        }
+
+        ob_start();
+        include plugin_dir_path(dirname(__DIR__)) . 'templates/parts/drinks-table.php';
         return ob_get_clean();
     }
 

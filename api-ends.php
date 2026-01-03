@@ -286,6 +286,7 @@ function zesa_tariffs($attr)
 }
 add_shortcode('zesa-tariffs', 'zesa_tariffs');
 */
+/*
 //Delta Alcohol
 function zp_drink_prices($attr)
 {
@@ -319,6 +320,7 @@ function zp_drink_prices($attr)
     }
 }
 add_shortcode('drink-prices', 'zp_drink_prices');
+*/
 
 //Transport and ZINARA
 
