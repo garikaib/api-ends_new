@@ -45,6 +45,7 @@ if (!empty($bands)) {
 }
 ?>
 
+<div class="fuel-prices-table">
 <h4>Latest ZESA Tariffs <?php echo esc_html($today_date); ?></h4>
 <figure class="wp-block-table">
     <table>
@@ -63,3 +64,4 @@ if (!empty($bands)) {
     <figcaption>The latest ZESA tariffs</figcaption>
 </figure>
 <p><strong>Last Updated on <?php echo esc_html($updated_at); ?></strong></p>
+</div>

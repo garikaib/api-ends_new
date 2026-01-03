@@ -11,9 +11,9 @@ class ZesaService {
      * @return array
      */
     public function getTariffs(): array {
-        // Fetch tariffs and rates in parallel (sequentially for now via ApiService)
-        $prices = $this->api->get('/prices/zesa');
-        $rates = $this->api->get('/rates/fx-rates');
+        // V2 API endpoints
+        $prices = $this->api->get('v2/prices/zesa');
+        $rates = $this->api->get('v2/rates/fx-rates');
 
         return [
             'prices' => $prices,

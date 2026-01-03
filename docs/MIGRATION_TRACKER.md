@@ -24,7 +24,7 @@ This document tracks the migration status of all shortcodes in the `api-ends` pl
 | `[passport-fees]` | `[passport-fees]` | GovtService | ✅ | ⏳ | ⏳ |
 | `[births-deaths]` | `[births-deaths]` | GovtService | ✅ | ⏳ | ⏳ |
 | `[citizen-status]` | `[citizen-status]` | GovtService | ✅ | ⏳ | ⏳ |
-| `[zesa-tariffs]` | `[zesa-tariffs]` | ZesaService | ✅ | ⏳ | ⏳ |
+| `[zesa-tariffs]` | `[zesa-tariffs]` | ZesaService | ✅ | ✅ | ✅ |
 | `[drink-prices]` | `[drink-prices]` | ConsumerGoodsService | ✅ | ⏳ | ⏳ |
 | `[tollgates]` | `[tollgates]` | TransportService | ✅ | ⏳ | ⏳ |
 | `[zinara-license]` | `[zinara-license]` | TransportService | ✅ | ⏳ | ⏳ |
