@@ -21,7 +21,7 @@ $rates = $rates_data['rates'] ?? [];
 $zig_mid = $rates['ZiG_Mid'] ?? 1; // Avoid div by zero
 
 // Sort bands
-usort($bands, fn($a, $b) => $a['min_units'] - $b['min_units']);
+usort($bands, fn($a, $b) => ($a['min_units'] ?? 0) - ($b['min_units'] ?? 0));
 
 $date_str = isset($prices_data['prices']['Date']) ? date_i18n("l, d F Y", strtotime($prices_data['prices']['Date'])) : 'Unknown Date';
 $cheap_total_zig = $zesaService->getCheapQuotaCost($prices_data, true);
@@ -50,7 +50,7 @@ if (!empty($bands)) {
         $units_desc = (strpos($desc, 'units') === false) ? ' Units' : '';
         $the_prefix = ($band_num === 0) ? ' the ' : '';
         
-        $price_zig = $product['zig_price_rea'] ?? 0;
+        $price_zig = $product['zig_price_rea'] ?? $product['zig_price'] ?? 0;
         $price_usd = isset($product['usd_price']) ? $product['usd_price'] : (($zig_mid > 0) ? ($price_zig / $zig_mid) : 0);
 
         $total_text = '';
@@ -110,6 +110,7 @@ foreach ($units_to_show as $u) {
 <p>This quota is restored on the first day of each month. This means that if you bought up all your <?php echo $discounted_units; ?> kWh in <?php echo $current_month; ?> from <?php echo $next_month_first; ?> you can now buy that <?php echo $discounted_units; ?> kWh at <?php echo PriceUtil::format($cheap_total_zig, 'zig'); ?> (<?php echo PriceUtil::format($cheap_total_usd, 'usd'); ?>).</p>
 
 <h4>What is a stepped tariff?</h4>
+<div class="fuel-prices-table">
 <figure class='wp-block-table'>
     <table>
         <thead>
@@ -120,6 +121,7 @@ foreach ($units_to_show as $u) {
         </tbody>
     </table>
 </figure>
+</div>
 
 <p>ZESA does not use a flat tariff like it used to. Instead, they use a stepped tariff. What this means is that the first few units you buy are cheaper.</p>
 <h4>I am still confused how many units will I get if I spend this much?</h4>
