@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Zimpricecheck API
  * Plugin URI:        https://zimpricecheck.com
- * Description:       The core engine for Zimpricecheck.com, handling API integrations, exchange rates, fuel prices, and fines.
+ * Description:       The comprehensive core engine for Zimpricecheck.com. This plugin manages API integrations, real-time exchange rates, fuel prices, traffic fines, ad management, and historical data visualization.
  * Version:           1.0.1
  * Author:            Garikai Dzoma
  * Author URI:        https://zimpricecheck.com
