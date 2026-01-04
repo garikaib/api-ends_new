@@ -19,111 +19,43 @@ A comprehensive WordPress plugin for displaying dynamic prices, exchange rates, 
 
 ## Shortcodes
 
-### ISP Packages
+For detailed usage, attributes, and examples, please refer to the documentation files linked below.
 
-#### TelOne
-Display TelOne internet packages.
-```
-[telone-prices type="All"]
-```
-**Attributes:**
--   `type`: Filter by package type. Options: `All`, `ADSL`, `Fibre`, `LTE`, `VSAT`, `WiFi`, `USD`.
-    -   *Note*: `VSAT` packages include LEO/Starlink notes.
+### Exchange Rates & Money
+*   [Latest Rates](docs/exchange-rates.md) - `[zpc-latest-rates]`
+*   [ZiG to USD Converter](docs/zig-usd-converter.md) - `[zig-usd]`
+*   [USD to ZiG Converter](docs/usd-zig-converter.md) - `[usd-zig]`
+*   [ZiG Withdrawal Limits](docs/zig-limits.md) - `[zig-limits]`
 
-#### Liquid Home (ZOL)
-Display Liquid Home internet packages.
-```
-[liquid-home type="All"]
-```
-**Attributes:**
--   `type`: Filter by package type. Options: `All`, `Fibre`, `LTE`, `VSAT`.
+### Internet Service Providers (ISPs) & Data
+*   [Liquid Home (ZOL)](docs/liquid-home.md) - `[liquid-home]`
+*   [TelOne](docs/telone.md) - `[telone]`
+*   [Utande](docs/utande.md) - `[utande]`
+*   [Econet Bundles](docs/econet-bundles.md) - `[econet-bundles]`
+*   [NetOne Bundles](docs/netone-bundles.md) - `[netone-bundles]`
+*   [Telecel Bundles](docs/telecel-bundles.md) - `[telecel-bundles]`
 
-#### Utande
-Display Utande internet packages.
-```
-[utande type="All"]
-```
-**Attributes:**
--   `type`: Filter by package type.
+### Fuel & Energy
+*   [Fuel Prices](docs/fuel-prices.md) - `[zpc-latest-fuel]`
+*   [LP Gas Prices](docs/lpg-prices.md) - `[show-latest-lpgas-prices]`
+*   [ZESA Tariffs](docs/zesa-tariffs.md) - `[zesa-tariffs]`
 
-### Exchange Rates
+### Transport
+*   [Transport (Master Shortcode)](docs/transport.md) - `[transport]`
+*   [Tollgates](docs/tollgates.md) - `[tollgates]`
+*   [ZUPCO Fares](docs/zupco.md) - `[zupco]`
+*   [Bus Fares](docs/bus-fares.md) - `[bus-fares]`
+*   [ZINARA Licensing](docs/zinara-license.md) - `[zinara-license]`
 
-#### Latest Rates
-Display a comprehensive table of the latest exchange rates.
-```
-[show-latest-rates]
-```
+### Government & Fines
+*   [Passport Fees](docs/passport-fees.md) - `[passport-fees]`
+*   [Fine Levels](docs/fine-levels.md) - `[fine-levels]`
+*   [Traffic Fines](docs/traffic-fines.md) - `[traffic-fines]`
+*   [Births & Deaths](docs/births-deaths.md) - `[births-deaths]`
+*   [Citizen Status](docs/citizen-status.md) - `[citizen-status]`
 
-#### USD to ZiG Table
-Display a detailed table for USD to ZiG conversions, including street and official rates.
-```
-[usd-zig]
-```
-
-#### ZiG to USD Table
-Display a detailed table for ZiG to USD conversions.
-```
-[zig-usd]
-```
-
-#### Call to Action Banner
-Display a banner linking to historical rate charts.
-```
-[zimpricecheck_cta]
-```
-
-### Fuel Prices
-
-#### Latest Fuel Prices
-Display the current prices for Petrol and Diesel.
-```
-[show-latest-fuel-prices]
-```
-
-#### Historical Fuel Prices
-Display a table of historical fuel prices.
-```
-[historical-fuel-prices-table]
-```
-
-#### LP Gas Prices
-Display the latest LP Gas prices.
-```
-[show-latest-lpgas-prices]
-```
-
-### Transport & Licensing
-
-#### Transport Costs
-Display various transport-related costs.
-```
-[transport type="zupco"]
-```
-**Attributes:**
--   `type`: The type of cost to display. Options:
-    -   `zupco`: ZUPCO fares.
-    -   `busfares`: Inter-city bus fares.
-    -   `tollgates`: Standard tollgate fees.
-    -   `tollgates_prem`: Premium tollgate fees.
-    -   `zinara`: Vehicle licensing fees (ZINARA).
-
-### Fines & Government Fees
-
-#### Traffic Fines
-Display standard traffic fines.
-```
-[traffic-fines]
-```
-
-#### Government Fines (Levels)
-Display government fine levels.
-```
-[fine-levels]
-```
-*Alias:* `[govt-fines]`
-
-#### Passport Fees
-Display current passport application fees.
-```
-[passport-fees]
-```
+### Consumer Goods & Misc
+*   [Groceries](docs/groceries.md) - `[groceries]`
+*   [Drink Prices](docs/drink-prices.md) - `[drink-prices]`
+*   [WhatsApp Channel](docs/whatsapp-channel.md) - `[zpc_wa_channel_banner]`
+*   [Ad Injection](docs/ad-injection.md) - `[before_actual_content]`
