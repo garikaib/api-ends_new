@@ -319,74 +319,16 @@ require_once plugin_dir_path(__FILE__) . 'includes/fines/class-traffic-fines.php
 require_once plugin_dir_path(__FILE__) . 'shortcodes/traffic-fines.php';
 
 
-function zp_govt_births($attr)
-{
-    try {
-
-        $fees = new ZIMAPI(ZIMAPI_BASE);
-        $latest_fees = "";
-        $endPoint = "/fees/births-deaths";
-        $latest_fees = $fees->callApi($endPoint, zp_get_remote_ip());
-        $endPoint = "/rates/fx-rates";
-        $latest_rates = $fees->callApi($endPoint, zp_get_remote_ip());
-        require_once plugin_dir_path(__FILE__) . 'templates/births-deaths.php';
-        return build_bd_registration_table($latest_fees, $latest_rates);
-    } catch (Exception $e) {
-        // Log the error
-        error_log('Error retrieving Birth/Death Fees: ' . $e->getMessage());
-        // Return an error message to the user
-        require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-        return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest Birth/Death fees at the moment. Please try again later.");
-    }
-}
-add_shortcode('births-deaths', 'zp_govt_births');
-
-function zp_govt_citizens($attr)
-{
-    try {
-
-        $fees = new ZIMAPI(ZIMAPI_BASE);
-        $latest_fees = "";
-        $endPoint = "/fees/citizen-status";
-        $latest_fees = $fees->callApi($endPoint, zp_get_remote_ip());
-        $endPoint = "/rates/fx-rates";
-        $latest_rates = $fees->callApi($endPoint, zp_get_remote_ip());
-        require_once plugin_dir_path(__FILE__) . 'templates/citizens-status.php';
-        return buildCitRegistrationTable($latest_fees, $latest_rates);
-    } catch (Exception $e) {
-        // Log the error
-        error_log('Error retrieving national registration fees: ' . $e->getMessage());
-        // Return an error message to the user
-        require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-        return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest National Registration Fees at the moment. Please try again later.");
-    }
-}
-add_shortcode('citizen-status', 'zp_govt_citizens');
-
-function zp_govt_passports($attr)
-{
-    try {
-
-        $fees = new ZIMAPI(ZIMAPI_BASE);
-        $latest_fees = "";
-        $endPoint = "/fees/passport";
-        $latest_fees = $fees->callApi($endPoint, zp_get_remote_ip());
-        $endPoint = "/rates/fx-rates";
-        $latest_rates = $fees->callApi($endPoint, zp_get_remote_ip());
-        require_once plugin_dir_path(__FILE__) . 'templates/passport-fees.php';
-        return buildPassFeesTable($latest_fees, $latest_rates);
-    } catch (Exception $e) {
-        // Log the error
-        error_log('Error retrieving Passport Fees: ' . $e->getMessage());
-        // Return an error message to the user
-        require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-        return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest Passport Fees at the moment. Please try again later.");
-    }
-}
-add_shortcode('passport-fees', 'zp_govt_passports');
+// NOTE: [births-deaths], [citizen-status] and [passport-fees] (plus
+// [passport-intro] and [sadc-passport-fees], previously registered via the
+// templates/passports-explanations.php require below) have moved to the
+// zimpricecheck-tools plugin's civil-registry module — see
+// wp-content/plugins/zimpricecheck-tools/civil-registry/. That version adds
+// WP transient caching (this one hit the upstream API on every single page
+// view), keeps the last known-good fees on an upstream failure instead of
+// showing an error, and fixes the birth/death/citizen tables all sharing one
+// copy-pasted (and for two of the three, wrong) "Birth and Death Certificate
+// Fees" caption.
 require_once plugin_dir_path(__FILE__) . 'includes/rates/class-zig-usd.php';
 require_once plugin_dir_path(__FILE__) . 'shortcodes/zig-usd.php';
 require_once plugin_dir_path(__FILE__) . 'includes/rates/class-usd-zig.php';
@@ -455,7 +397,10 @@ require plugin_dir_path(__FILE__) . 'templates/sales/add-tokens.php';
 //To declutter we have moved shortcodes to their associated template files.
 
 require plugin_dir_path(__FILE__) . 'templates/cvr-licence-fees.php';
-require plugin_dir_path(__FILE__) . 'templates/passports-explanations.php';
+// Passport/births-deaths/citizen-status fee tables MIGRATED to
+// zimpricecheck-tools/civil-registry/ (August 2026) — archived to
+// wp-content/_deprecated/civil-registry-2026-08-24/, removed from here.
+// require plugin_dir_path(__FILE__) . 'templates/passports-explanations.php';
 // Historical rates browsing MIGRATED to zimpricecheck-tools/prices/ (August 2026) —
 // archived to wp-content/_deprecated/rates-2026-08-23/, removed from here.
 // require plugin_dir_path(__FILE__) . 'historical-rates/historical-rates.php';
