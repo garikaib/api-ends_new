@@ -17,7 +17,7 @@ class ZP_Latest_Fuel
      */
     public function __construct()
     {
-        $this->zim_api = new ZIMAPI(ZIMAPI_BASE);
+        $this->zim_api = CachedZIMAPI::get_default_client();
     }
 
     /**
@@ -29,10 +29,10 @@ class ZP_Latest_Fuel
     {
         $endpoints = [
             'fuel' => [
-                'endpoint' => '/fuel/',
+                'endpoint' => '/v2/fuel/prices',
             ],
             'rates' => [
-                'endpoint' => '/rates/fx-rates',
+                'endpoint' => '/v2/rates/fx-rates',
             ],
         ];
 
@@ -59,7 +59,8 @@ class ZP_Latest_Fuel
         }
 
         // Check for success in multiCallApi results
-        if (empty($data['fuel']['success']) || empty($data['rates']['success'])) {
+        if (empty($data['fuel']['success']) || empty($data['rates']['success']) ||
+            empty($data['fuel']['data']['success']) || empty($data['rates']['data']['success'])) {
             require_once plugin_dir_path(dirname(dirname(__FILE__))) . 'includes/class-show-notice.php';
             return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest fuel prices at the moment. Please try again later.");
         }

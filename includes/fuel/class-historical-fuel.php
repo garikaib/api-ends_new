@@ -17,7 +17,7 @@ class ZP_Historical_Fuel
      */
     public function __construct()
     {
-        $this->zim_api = new ZIMAPI(ZIMAPI_BASE);
+        $this->zim_api = CachedZIMAPI::get_default_client();
     }
 
     /**
@@ -32,7 +32,7 @@ class ZP_Historical_Fuel
 
         $endpoints = [
             'fuel' => [
-                'endpoint' => '/fuel/',
+                'endpoint' => '/v2/fuel/prices',
                 'method'   => 'GET',
                 'payload'  => [
                     'from' => $from_date,
@@ -63,7 +63,7 @@ class ZP_Historical_Fuel
         }
 
         // Check for success in multiCallApi results
-        if (empty($data['fuel']['success'])) {
+        if (empty($data['fuel']['success']) || empty($data['fuel']['data']['success'])) {
             return '<p><strong>Unable to retrieve historical fuel prices at this time.</strong></p>';
         }
 

@@ -17,7 +17,7 @@ class ZP_ZiG_USD_Table
      */
     public function __construct()
     {
-        $this->zim_api = new ZIMAPI(ZIMAPI_BASE);
+        $this->zim_api = new CachedZIMAPI(ZIMAPI_BASE);
     }
 
     /**
@@ -89,7 +89,8 @@ class ZP_ZiG_USD_Table
         }
 
         // Check for success in multiCallApi results
-        if (empty($data['rates']['success']) || empty($data['oe_rates']['success'])) {
+        if (empty($data['rates']['success']) || empty($data['oe_rates']['success']) ||
+            empty($data['rates']['data']['success']) || empty($data['oe_rates']['data']['success'])) {
             error_log('ZP_ZiG_USD_Table: API call failed or partial failure.');
             require_once plugin_dir_path(dirname(dirname(__FILE__))) . 'includes/class-show-notice.php';
             return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest rates at the moment. Please try again later.");

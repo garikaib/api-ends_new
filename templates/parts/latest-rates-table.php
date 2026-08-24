@@ -72,38 +72,46 @@ $cross_headers = [
     '1 ZiG to Nigerian Naira' => 'zig_to_ngn',
 ];
 
-function zp_generate_rows($headers, $processed_data, $curr_symbols) {
-    $rows = '';
-    foreach ($headers as $header => $key) {
-        if ($key === 'zig_to_usd') {
-            $zig_to_usd = number_format(1 / $processed_data['rates']['ZiG_Mid'], 4, '.', '');
-            $value = 'US$' . $zig_to_usd;
-        } elseif ($key === 'max_bus_rate') {
-            $value = number_format($processed_data['rates']['ZiG_Ask'] * 1.0, 4, '.', '') . ' ZiG';
-        } else {
-            $value = array_key_exists($key, $processed_data['rates']) ? esc_html($processed_data['rates'][$key]) : 'N/A';
-            if ($value !== 'N/A' && is_numeric($value)) {
-                $value = number_format($value, 4, '.', '');
-                $symbol = isset($curr_symbols[$key]) ? $curr_symbols[$key] : '';
-                if ($symbol === 'ZiG') {
-                    $value .= ' ' . $symbol;
-                } else {
-                    $value = $symbol . $value;
+if (!function_exists('zp_generate_rows')) {
+    function zp_generate_rows($headers, $processed_data, $curr_symbols)
+    {
+        $rows = '';
+        foreach ($headers as $header => $key) {
+            if ($key === 'zig_to_usd') {
+                $mid_rate = isset($processed_data['rates']['ZiG_Mid']) && is_numeric($processed_data['rates']['ZiG_Mid'])
+                    ? (float) $processed_data['rates']['ZiG_Mid']
+                    : 0.0;
+                $value = $mid_rate > 0.0 ? 'US$' . number_format(1 / $mid_rate, 4, '.', '') : 'N/A';
+            } elseif ($key === 'max_bus_rate') {
+                $ask_rate = isset($processed_data['rates']['ZiG_Ask']) && is_numeric($processed_data['rates']['ZiG_Ask'])
+                    ? (float) $processed_data['rates']['ZiG_Ask']
+                    : 0.0;
+                $value = $ask_rate > 0.0 ? number_format($ask_rate * 1.0, 4, '.', '') . ' ZiG' : 'N/A';
+            } else {
+                $value = array_key_exists($key, $processed_data['rates']) ? esc_html($processed_data['rates'][$key]) : 'N/A';
+                if ($value !== 'N/A' && is_numeric($value)) {
+                    $value = number_format((float) $value, 4, '.', '');
+                    $symbol = isset($curr_symbols[$key]) ? $curr_symbols[$key] : '';
+                    if ($symbol === 'ZiG') {
+                        $value .= ' ' . $symbol;
+                    } else {
+                        $value = $symbol . $value;
+                    }
                 }
             }
-        }
-        if ($key === 'ZiG_Mid' && $value !== 'N/A') {
-            $value .= "<sup class='zpc-rates-badge-official'>Official</sup>";
-        }
+            if ($key === 'ZiG_Mid' && $value !== 'N/A') {
+                $value .= "<sup class='zpc-rates-badge-official'>Official</sup>";
+            }
 
-        $rows .= "
-            <tr>
-                <td>{$header}</td>
-                <td>{$value}</td>
-            </tr>
-        ";
+            $rows .= "
+                <tr>
+                    <td>{$header}</td>
+                    <td>{$value}</td>
+                </tr>
+            ";
+        }
+        return $rows;
     }
-    return $rows;
 }
 
 $usd_rows = zp_generate_rows($usd_headers, $processed_data, $curr_symbols);

@@ -8,6 +8,25 @@
 class CachedZIMAPI extends ZIMAPI
 {
     /**
+     * @var CachedZIMAPI|null The singleton instance.
+     */
+    private static $default_instance = null;
+
+    /**
+     * Get the default CachedZIMAPI instance.
+     *
+     * @return CachedZIMAPI
+     */
+    public static function get_default_client(): self
+    {
+        if (self::$default_instance === null) {
+            $base_url = defined('ZIMAPI_BASE') ? ZIMAPI_BASE : 'https://a.garikai.xyz/api';
+            self::$default_instance = new self($base_url);
+        }
+        return self::$default_instance;
+    }
+
+    /**
      * @var int Cache duration in seconds. Default is 1 hour.
      */
     private $cacheDuration;
@@ -43,8 +62,8 @@ class CachedZIMAPI extends ZIMAPI
         // Get cache version
         $version = get_option('zimapi_cache_version', 1);
 
-        // Generate a unique cache key with version
-        $cacheKey = 'zimapi_v' . $version . '_' . md5($url . $remoteIP . $day . $httpMethod);
+        // Generate a unique cache key with version (no client IP!)
+        $cacheKey = 'zimapi_v' . $version . '_' . md5($url . '_' . $day . '_' . $httpMethod);
 
         // Check for cached response
         $cachedResponse = get_transient($cacheKey);
@@ -94,8 +113,8 @@ class CachedZIMAPI extends ZIMAPI
             $method = $endpoint['method'] ?? $httpMethod;
             $payload = $endpoint['payload'] ?? [];
             
-            // Create a cache key specific to this endpoint request with version
-            $cacheKey = 'zimapi_multi_v' . $version . '_' . md5($url . serialize($payload) . $remoteIP . $day . $method);
+            // Create a cache key specific to this endpoint request with version (no client IP!)
+            $cacheKey = 'zimapi_multi_v' . $version . '_' . md5($url . serialize($payload) . '_' . $day . '_' . $method);
             
             $cachedResponse = get_transient($cacheKey);
             if ($cachedResponse !== false) {
@@ -112,12 +131,12 @@ class CachedZIMAPI extends ZIMAPI
             foreach ($fetchedResults as $key => $result) {
                 $results[$key] = $result;
 
-                // Cache successful results
-                if (isset($result['success']) && $result['success'] === true) {
+                // Cache successful results (only cache if the request succeeded AND the API response internal success is true)
+                if (isset($result['success']) && $result['success'] === true && !empty($result['data']['success'])) {
                     $url = $endpointsToFetch[$key]['endpoint'] ?? '';
                     $method = $endpointsToFetch[$key]['method'] ?? $httpMethod;
                     $payload = $endpointsToFetch[$key]['payload'] ?? [];
-                    $cacheKey = 'zimapi_multi_v' . $version . '_' . md5($url . serialize($payload) . $remoteIP . $day . $method);
+                    $cacheKey = 'zimapi_multi_v' . $version . '_' . md5($url . serialize($payload) . '_' . $day . '_' . $method);
                     
                     set_transient($cacheKey, $result, $duration);
                 }

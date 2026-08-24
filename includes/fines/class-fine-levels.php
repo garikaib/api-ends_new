@@ -59,7 +59,8 @@ class ZP_Fine_Levels
         }
 
         // Check for success in multiCallApi results
-        if (empty($data['fines']['success']) || empty($data['rates']['success'])) {
+        if (empty($data['fines']['success']) || empty($data['rates']['success']) ||
+            empty($data['fines']['data']['success']) || empty($data['rates']['data']['success'])) {
             require_once plugin_dir_path(dirname(dirname(__FILE__))) . 'includes/class-show-notice.php';
             return ZP_SHOW_NOTICE::showError("We couldn't retrieve the fine levels at the moment. Please try again later.");
         }

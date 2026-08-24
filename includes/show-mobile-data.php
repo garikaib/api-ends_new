@@ -1,4 +1,22 @@
 <?php
+function zp_get_mobile_rate(array $rates): float
+{
+    $pool = isset($rates['rates']) && is_array($rates['rates']) ? $rates['rates'] : [];
+
+    // Prefer Ecocash; fall back to other known rates.
+    $keys = array('Ecocash', 'ZiG_Mid', 'Cash', 'WBWS_Mid');
+    foreach ($keys as $key) {
+        if (isset($pool[$key]) && is_numeric($pool[$key])) {
+            $rate = (float) $pool[$key];
+            if ($rate > 0.0) {
+                return $rate;
+            }
+        }
+    }
+
+    return 0.0;
+}
+
 function showData(array $data, array $rates, string $req, string $filter = "none", $walker = false)
 {
     $stack = array(
@@ -28,6 +46,7 @@ function showNormalBundle(array $bundles, array $rates, string $bundleType, stri
 {
     $product_table = "";
     $prices = $bundles['prices']['bundles'];
+    $mobile_rate = zp_get_mobile_rate($rates);
 
     foreach ($prices as $product) {
         if ($product['description'] === $bundleType) {
@@ -37,7 +56,12 @@ function showNormalBundle(array $bundles, array $rates, string $bundleType, stri
             } elseif ($bundleType === "facebook") {
                 $data_all = $product["fb"];
             }
-            $product_table .= '<tr><td>' . $product['package_name'] . '</td><td>' . zp_format_prices($product['zwl_price']) . '</td><td>' . zp_format_prices(zp_to_usd($rates['rates']['Ecocash'] * 0.95, $product['zwl_price']), "usd") . '</td><td>' . zp_format_data($data_all) . '</td><td>' . to_relative_time($product['validity']) . '</td></tr>';
+            $usd_display = 'N/A';
+            if ($mobile_rate > 0.0) {
+                $usd_display = zp_format_prices(zp_to_usd($mobile_rate * 0.95, (float) $product['zwl_price']), "usd");
+            }
+
+            $product_table .= '<tr><td>' . $product['package_name'] . '</td><td>' . zp_format_prices($product['zwl_price']) . '</td><td>' . $usd_display . '</td><td>' . zp_format_data($data_all) . '</td><td>' . to_relative_time($product['validity']) . '</td></tr>';
         }
     }
     return $product_table;
@@ -46,13 +70,19 @@ function showHyBridBundle(array $bundles, array $rates, string $bundleType, stri
 {
     $product_table = "";
     $prices = $bundles['prices']['bundles'];
+    $mobile_rate = zp_get_mobile_rate($rates);
 
     foreach ($prices as $product) {
         //Is the filter in there
         $pos = strpos(strtolower($product["package_name"]), strtolower($filter));
 
         if ($product['description'] === $bundleType && ($pos !== false || $filter === "none")) {
-            $product_table .= '<tr><td>' . $product['package_name'] . '</td><td>' . zp_format_prices($product['zwl_price']) . '</td><td>' . zp_format_prices(zp_to_usd($rates['rates']['Ecocash'] * 0.95, $product['zwl_price']), "usd") . '</td><td>' . zp_what_you_get($product) . '</td><td>' . to_relative_time($product['validity']) . '</td></tr>';
+            $usd_display = 'N/A';
+            if ($mobile_rate > 0.0) {
+                $usd_display = zp_format_prices(zp_to_usd($mobile_rate * 0.95, (float) $product['zwl_price']), "usd");
+            }
+
+            $product_table .= '<tr><td>' . $product['package_name'] . '</td><td>' . zp_format_prices($product['zwl_price']) . '</td><td>' . $usd_display . '</td><td>' . zp_what_you_get($product) . '</td><td>' . to_relative_time($product['validity']) . '</td></tr>';
         }
     }
     return $product_table;
@@ -70,6 +100,7 @@ function showHyBridBundle(array $bundles, array $rates, string $bundleType, stri
 function show_econ_usd_bundle(array $bundles, array $rates, string $bundle_type, string $filter = 'none'): string
 {
     $product_table = '';
+    $mobile_rate = zp_get_mobile_rate($rates);
 
     $prices = $bundles['prices']['bundles'];
 
@@ -88,14 +119,14 @@ function show_econ_usd_bundle(array $bundles, array $rates, string $bundle_type,
         }
 
         $usd_price = $product['usd_price'];
-        $ecocash_price = $rates['rates']['Ecocash'] * $usd_price;
+        $ecocash_price = $mobile_rate > 0.0 ? $mobile_rate * $usd_price : null;
         $what_you_get = zp_what_you_get($product);
         $validity = to_relative_time($product['validity']);
 
         $product_table .= '<tr>';
         $product_table .= '<td>' . $product['package_name'] . '</td>';
         $product_table .= '<td>' . zp_format_prices($usd_price, 'usd') . '</td>';
-        $product_table .= '<td>' . zp_format_prices($ecocash_price) . '</td>';
+        $product_table .= '<td>' . ($ecocash_price === null ? 'N/A' : zp_format_prices($ecocash_price)) . '</td>';
         $product_table .= '<td>' . $what_you_get . '</td>';
         $product_table .= '<td>' . $validity . '</td>';
         $product_table .= '</tr>';

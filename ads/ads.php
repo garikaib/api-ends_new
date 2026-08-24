@@ -79,8 +79,8 @@ function zpc_can_show_ads()
         return false;
     }
 
-    // Check if the post slug is 'zesa' or the post ID is 11702
-    if ($current_post->post_name === 'zesa' || $current_post->ID === 11702) {
+    // Check if the post is an excluded utility or corporate page
+    if (in_array($current_post->post_name, ['zesa', 'contact', 'about', 'shop', 'cart', 'checkout', 'my-account'], true) || in_array($current_post->ID, [11702, 1942], true)) {
         return false;
     }
 
@@ -108,6 +108,24 @@ function zpc_can_show_ads()
  * @param string $content Optional. Content between shortcode tags.
  * @return string HTML markup for the advertisement, or empty string if conditions aren't met.
  */
+function zpc_wrap_ad_slot($ad_html, $slot_type = 'content')
+{
+    $ad_html = trim((string) $ad_html);
+    if (empty($ad_html)) {
+        return '';
+    }
+
+    return sprintf(
+        '<div class="zpc-ad-container zpc-ad-slot-%s" data-ad-slot="%s">%s</div>',
+        esc_attr($slot_type),
+        esc_attr($slot_type),
+        $ad_html
+    );
+}
+
+/**
+ * Displays advertisement banners on specified pages.
+ */
 function zpc_ads_show($content = null)
 {
     // Ensure we're not in admin or feed context
@@ -117,7 +135,6 @@ function zpc_ads_show($content = null)
 
     // Check if ads can be shown
     if (! zpc_can_show_ads()) {
-        //  error_log('Cant Show Ads!');
         return $content;
     }
 
@@ -126,10 +143,8 @@ function zpc_ads_show($content = null)
         return $content;
     }
 
-    $before_ad = adrotate_ad(2);
-
-    $after_ad = adrotate_ad(2);
-
+    $before_ad = zpc_wrap_ad_slot(adrotate_ad(2), 'leaderboard');
+    $after_ad = zpc_wrap_ad_slot(adrotate_ad(2), 'content');
 
     // Only proceed if we are inside the actual content section
     if (is_inside_actual_content()) {
@@ -137,42 +152,28 @@ function zpc_ads_show($content = null)
         $paragraphs = explode("</p>", $content);
         $paragraph_count = count($paragraphs);
 
-
         if ($paragraph_count > 2) {
-            $ad_after_second_paragraph = adrotate_ad(2);
-            // Add the ad after the second paragraph
-
+            $ad_after_second_paragraph = zpc_wrap_ad_slot(adrotate_ad(2), 'content');
             $new_content = implode("</p>", array_slice($paragraphs, 0, 2)) . "</p>" . $ad_after_second_paragraph;
             $remaining_paragraphs = array_slice($paragraphs, 2);
-
             $remaining_count = count($remaining_paragraphs);
-
             $ad_count = 0;
 
-
             for ($i = 0; $i < $remaining_count; $i++) {
-
                 $new_content .= $remaining_paragraphs[$i] . "</p>";
-
                 $ad_count++;
                 if ($ad_count == 3 && ($remaining_count - $i) > 3) {
-                    $ad_after_every_third = adrotate_ad(2);
+                    $ad_after_every_third = zpc_wrap_ad_slot(adrotate_ad(2), 'content');
                     $new_content .= $ad_after_every_third;
                     $ad_count = 0;
                 }
-
             }
             $content = $before_ad . $new_content . $after_ad;
-            //   error_log('Inside with Ads after every 3 paragraphs');
-
         } else {
             $content = $before_ad . $content . $after_ad;
-            //  error_log('Inside! but not enough paragraphs!');
-
         }
-    } else {
-        // error_log('Not inside!');
     }
+
     // Return the filtered output
     return $content;
 }
@@ -200,7 +201,14 @@ add_shortcode('after_actual_content', 'after_actual_content_shortcode');
 
 function francisco_money()
 {
-    // error_log("Fired Franscisco Money");
+    if (is_admin() || is_feed()) {
+        return;
+    }
+
+    if (function_exists('is_checkout') && is_checkout()) {
+        return;
+    }
+
     echo '
 <script data-cfasync="false" type="text/javascript" id="clever-core">
 /* <![CDATA[ */
@@ -216,7 +224,6 @@ function francisco_money()
         c.setAttribute("data-callback", "put-your-callback-function-here");
         c.setAttribute("data-callback-url-click", "put-your-click-macro-here");
         c.setAttribute("data-callback-url-view", "put-your-view-macro-here");
-        
 
         try {
             a = parent.document.getElementsByTagName("script")[0] || document.getElementsByTagName("script")[0];
@@ -231,5 +238,4 @@ function francisco_money()
 </script>
 ';
 }
-add_action('avada_after_content', 'francisco_money');
-// error_log("Fired Franscisco Money");
+add_action('wp_footer', 'francisco_money');

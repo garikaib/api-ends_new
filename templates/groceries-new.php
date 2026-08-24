@@ -6,6 +6,8 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
+require_once plugin_dir_path(__DIR__) . 'includes/show-price-footer.php';
+
 /**
  * Registers the [groceries_new] shortcode.
  */
@@ -150,12 +152,14 @@ function build_groceries_new_table(array $data) {
     // Populate table rows
     $table_html .= show_groceries_new_table($products, $shops_info);
 
+    $footer_html = function_exists('zp_show_footer') ? zp_show_footer() : '';
+
     $table_html .= '</tbody>
             </table>
             <figcaption>The latest Supermarket Prices</figcaption>
         </figure>
         <p><strong>Last Updated on ' . esc_html($updated_at) . '</strong></p>
-        ' . zp_show_footer();
+        ' . $footer_html;
 
     return $table_html;
 }
@@ -241,5 +245,4 @@ function zp_format_price_new($price, $currency) {
         return esc_html($formatted_number);
     }
 }
-
 

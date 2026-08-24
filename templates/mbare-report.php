@@ -52,7 +52,7 @@ function build_mbare_report(array $pricesData, array $rates = [])
     require_once plugin_dir_path(__DIR__) . 'includes/format-prices.php';
 
     $product_table = '';
-    error_log(print_r($pricesData, true)); // For debugging - check the structure
+    // error_log(print_r($pricesData, true)); // For debugging - check the structure
 
     // Access the correct level for 'produce_prices' and handle potential errors
     if (isset($pricesData['prices']['produce_prices'])) {

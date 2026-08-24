@@ -15,12 +15,12 @@ function add_lp_gas_schema($pieces, $context)
     // Get remote IP
     $remote_ip = zp_get_remote_ip();
 
-    // Create an instance of the ZIMAPI class
-    $api = new ZIMAPI(ZIMAPI_BASE);
+    // Create an instance of the CachedZIMAPI class
+    $api = CachedZIMAPI::get_default_client();
 
     try {
         // Call the callApi method and store the result in a variable
-        $data = $api->callApi("/fuel/lp-gas", $remote_ip);
+        $data = $api->callApi("/v2/fuel/lp-gas", $remote_ip);
 
         if ($data) {
             $pieces[] = new LPGasPriceSchema($context, $data);
