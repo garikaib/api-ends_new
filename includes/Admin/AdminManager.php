@@ -1,11 +1,10 @@
 <?php
 
-namespace ZimPriceCheck\ApiEnds\Admin;
+namespace Zimpricecheck\ApiEnds\Admin;
 
-use ZimPriceCheck\ApiEnds\Admin\CarbonFields\Settings;
-use ZimPriceCheck\ApiEnds\Admin\CarbonFields\AdsSettings;
-use ZimPriceCheck\ApiEnds\Admin\CarbonFields\CacheSettings;
-use ZimPriceCheck\ApiEnds\Admin\CarbonFields\DateSettings;
+use Zimpricecheck\ApiEnds\Admin\CarbonFields\Settings;
+use Zimpricecheck\ApiEnds\Admin\CarbonFields\CacheSettings;
+use Zimpricecheck\ApiEnds\Admin\CarbonFields\DateSettings;
 
 class AdminManager
 {
@@ -26,7 +25,6 @@ class AdminManager
     public function register_fields()
     {
         new Settings();
-        new AdsSettings();
         new CacheSettings();
         new DateSettings();
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace ZimPriceCheck\ApiEnds\Admin\CarbonFields;
+namespace Zimpricecheck\ApiEnds\Admin\CarbonFields;
 
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;

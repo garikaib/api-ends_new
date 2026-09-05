@@ -1,6 +1,6 @@
 <?php
 
-namespace ZimPriceCheck\ApiEnds\Admin\CarbonFields;
+namespace Zimpricecheck\ApiEnds\Admin\CarbonFields;
 
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
@@ -20,8 +20,7 @@ class Settings
             ->set_icon(API_END_URL . 'assets/images/settings.svg')
             ->add_tab(__('Core Settings'), $this->get_core_settings())
             ->add_tab(__('Rates & Data'), $this->get_rates_data_settings())
-            ->add_tab(__('Marketing'), $this->get_marketing_settings())
-            ->add_tab(__('Holidays'), $this->get_holidays_settings());
+            ->add_tab(__('Marketing'), $this->get_marketing_settings());
     }
 
     private function get_core_settings()
@@ -112,25 +111,6 @@ class Settings
             Field::make('text', 'whatsapp_banner_button_text', __('Button Text'))
                 ->set_default_value('Join Now!')
                 ->set_width(100),
-        );
-    }
-
-    private function get_holidays_settings()
-    {
-        return array(
-            Field::make('html', 'crb_holidays_header')
-                ->set_html('<div class="zpc-header"><h2 class="zpc-title">Public Holidays</h2><p class="zpc-subtitle">Define public holidays for the system.</p></div>'),
-            
-            Field::make('complex', 'public_holidays', __('Holiday Dates'))
-                ->add_fields(array(
-                    Field::make('date', 'holiday_date', __('Holiday Date'))
-                        ->set_storage_format('Y-m-d')
-                        ->set_width(50),
-                    Field::make('text', 'holiday_name', __('Holiday Name'))
-                        ->set_width(50),
-                ))
-                ->set_layout('tabbed-horizontal')
-                ->set_help_text('Add the dates and names of public holidays'),
         );
     }
 }

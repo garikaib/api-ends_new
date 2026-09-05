@@ -69,13 +69,12 @@ define('API_END_BASE', plugin_dir_path(__FILE__));
 define('API_END_URL', plugin_dir_url(__FILE__));
 // Load Admin Classes
 require_once API_END_BASE . 'includes/Admin/CarbonFields/Settings.php';
-require_once API_END_BASE . 'includes/Admin/CarbonFields/AdsSettings.php';
 require_once API_END_BASE . 'includes/Admin/CarbonFields/CacheSettings.php';
 require_once API_END_BASE . 'includes/Admin/CarbonFields/DateSettings.php';
 require_once API_END_BASE . 'includes/Admin/AdminManager.php';
 
 // Initialize Admin Manager
-new \ZimPriceCheck\ApiEnds\Admin\AdminManager();
+new \Zimpricecheck\ApiEnds\Admin\AdminManager();
 
 require_once API_END_BASE . 'includes/utils/admin-notices.php';
 require_once API_END_BASE . 'includes/class-table-footer.php';
@@ -112,35 +111,8 @@ require_once plugin_dir_path(__FILE__) . 'includes/utils.php';
 //Get remote IP for logging
 require_once plugin_dir_path(__FILE__) . 'includes/get-ip.php';
 
-/**
- * Show latest exchange rates.
- */
-/**
- * Show latest exchange rates.
- */
-// require_once plugin_dir_path(__FILE__) . 'templates/rates.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-cached-zimapi.php';
 require_once plugin_dir_path(__FILE__) . 'includes/format-prices.php';
-// Exchange rate display + historical browsing MIGRATED to zimpricecheck-tools/prices/
-// (August 2026) — archived to wp-content/_deprecated/rates-2026-08-23/, removed from here.
-// require_once plugin_dir_path(__FILE__) . 'includes/rates/class-exchange-rates.php';
-// require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-rates.php';
-
-/**
- * Fuel and LP Gas prices MIGRATED to zimpricecheck-tools/prices/ (August 2026).
- * The shortcode tags (show-latest-fuel-prices, historical-fuel-prices-table,
- * show-latest-lpgas-prices) and Yoast schema are now registered from there —
- * these files are left in place but no longer loaded.
- */
-// require_once plugin_dir_path(__FILE__) . 'includes/fuel/class-latest-fuel.php';
-// require_once plugin_dir_path(__FILE__) . 'shortcodes/latest-fuel.php';
-// require_once plugin_dir_path(__FILE__) . 'includes/fuel/class-historical-fuel.php';
-// require_once plugin_dir_path(__FILE__) . 'shortcodes/historical-fuel.php';
-// require_once plugin_dir_path(__FILE__) . 'includes/fuel/class-lp-gas.php';
-// require_once plugin_dir_path(__FILE__) . 'shortcodes/lp-gas.php';
-// Mbare Musika MIGRATED to zimpricecheck-tools/prices/ (August 2026) — also fixes it
-// silently using a stale/unversioned endpoint instead of the current /v2 one.
-// require_once plugin_dir_path(__FILE__) . 'templates/mbare-report.php';
 
 //Get and show latest Liquid Home Prices
 //Get and show latest Liquid Home Prices
@@ -250,39 +222,11 @@ function telecel_data_bundles($attr)
 add_shortcode('telecel-bundles', 'telecel_data_bundles');
 // ZESA tariffs MIGRATED to zimpricecheck-tools/prices/ + zesa-calculator/ (August 2026).
 // Old code archived to wp-content/_deprecated/zesa-2026-08-23/ and removed from here.
-//Delta Alcohol
-function zp_drink_prices($attr)
-{
-    try {
-        $type = "deltaa"; //Default type is all
-        if (is_array($attr) && array_key_exists("type", $attr)) {
-            $type = $attr["type"];
-        }
-
-        $drinks = new ZIMAPI(ZIMAPI_BASE);
-        $latest_prices = "";
-        $endPoint = "/rates/fx-rates";
-        $latest_rates = $drinks->callApi($endPoint, zp_get_remote_ip());
-        if ($type === "deltaa") {
-            $endPoint = "/prices/drinks/deltaa";
-            $latest_prices = $drinks->callApi($endPoint, zp_get_remote_ip());
-            require_once plugin_dir_path(__FILE__) . 'templates/delta-alcohol.php';
-            return build_delta_a_table($latest_prices, $latest_rates);
-        } else {
-
-            require_once plugin_dir_path(__FILE__) . 'templates/zesa-tariffs.php';
-            return buildZESATable($latest_prices, $latest_rates);
-        }
-    } catch (Exception $e) {
-        // Log the error
-        error_log('Error retrieving Delta prices: ' . $e->getMessage());
-        // Return an error message to the user
-        require_once plugin_dir_path(__FILE__) . 'includes/class-show-notice.php';
-
-        return ZP_SHOW_NOTICE::showError("We couldn't retrieve the latest Delta prices at the moment. Please try again later.");
-    }
-}
-add_shortcode('drink-prices', 'zp_drink_prices');
+// [drink-prices type=deltaa] (Delta-only alcohol prices) MIGRATED to
+// zimpricecheck-tools/prices/ as [alcohol-prices category="..."] (September 2026) — the
+// new source covers every wholesaler brand in the survey, not just Delta's, and adds a
+// retail-price estimate (wholesale case price × 1.3) alongside the wholesale figure.
+// Old code archived to wp-content/_deprecated/alcohol-2026-09-04/ and removed from here.
 
 //Transport and ZINARA
 
@@ -307,16 +251,12 @@ require_once plugin_dir_path(__FILE__) . 'templates/groceries-new.php';
  *
  * @return string HTML table of latest Fine Levels or error message if unable to retrieve.
  */
-require_once plugin_dir_path(__FILE__) . 'includes/fines/class-fine-levels.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/fine-levels.php';
 
 /**
  * Get and show Traffic Fines.
  *
  * @return string HTML table of Traffic Fines or error message if unable to retrieve.
  */
-require_once plugin_dir_path(__FILE__) . 'includes/fines/class-traffic-fines.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/traffic-fines.php';
 
 
 // NOTE: [births-deaths], [citizen-status] and [passport-fees] (plus
@@ -329,10 +269,11 @@ require_once plugin_dir_path(__FILE__) . 'shortcodes/traffic-fines.php';
 // showing an error, and fixes the birth/death/citizen tables all sharing one
 // copy-pasted (and for two of the three, wrong) "Birth and Death Certificate
 // Fees" caption.
-require_once plugin_dir_path(__FILE__) . 'includes/rates/class-zig-usd.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/zig-usd.php';
-require_once plugin_dir_path(__FILE__) . 'includes/rates/class-usd-zig.php';
-require_once plugin_dir_path(__FILE__) . 'shortcodes/usd-zig.php';
+// NOTE: [zig-usd] and [usd-zig] have moved to the zimpricecheck-tools plugin's
+// prices module — see wp-content/plugins/zimpricecheck-tools/prices/. That
+// version reuses the same cron-warmed `rates` source [show-latest-rates]
+// already runs on, instead of this plugin's uncached ZIMAPI client making its
+// own upstream call (fx-rates, and for [zig-usd] also oe-rates) on every render.
 function zp_zig_usd_withdrawal_limits($attr)
 {
     try {
@@ -351,66 +292,15 @@ function zp_zig_usd_withdrawal_limits($attr)
     }
 }
 add_shortcode('zig-limits', 'zp_zig_usd_withdrawal_limits');
-// Get and show latest ZBC License Fees
-require_once API_END_BASE . 'templates/zbc-licences.php';
-
-//Add Order Received Page Allows us to mark PayPal payment as complete
-//Waiting for IPN has been unreliable so far. we will fix this later and may be get rid of this.
-require_once plugin_dir_path(__FILE__) . 'templates/order-received.php';
-//Test order received for when we are testing
-
-require_once plugin_dir_path(__FILE__) . 'templates/test-order.php';
-
-//Redirect if user is trying to pay for an old order
-require_once plugin_dir_path(__FILE__) . 'includes/generate-paypal.php';
-
-function load_schema_files_if_yoast_active()
-{
-    // Check if Yoast SEO plugin is active
-    if (is_plugin_active('wordpress-seo/wp-seo.php')) {
-        //Add Schema to various pages
-        // Rates, Mbare, Fuel Prices & LP Gas schema MIGRATED to zimpricecheck-tools/prices/class-zpc-prices-schema.php
-        // (August 2026) — also fixes them running an uncached API call on every page load site-wide,
-        // and removes fabricated aggregateRating data. Rates schema not recreated (Offer/aggregateRating
-        // never fit exchange rates well). Left in place, no longer loaded.
-        // require_once plugin_dir_path(__FILE__) . 'includes/schema/rates-schema.php';
-        // require_once plugin_dir_path(__FILE__) . 'includes/schema/mbare-schema.php';
-        // require_once plugin_dir_path(__FILE__) . 'includes/schema/fuel-schema.php';
-        // require_once plugin_dir_path(__FILE__) . 'includes/schema/lp-gas-schema.php';
-    }
-}
-add_action('init', 'load_schema_files_if_yoast_active');
-
-//Allow us to add previous day to rates list using REST API every time we update following date's rate
-// Exchange rate post-per-day generator MIGRATED to zimpricecheck-tools/prices/ (August 2026) —
-// archived to wp-content/_deprecated/rates-2026-08-23/, removed from here.
-// require plugin_dir_path(__FILE__) . 'includes/publish-rates.php';
 
 //Clear cache
 require plugin_dir_path(__FILE__) . 'includes/purge-cache.php';
 //Append date to price updates
 require plugin_dir_path(__FILE__) . 'includes/append-date.php';
 
-//Add hook for custom queries involving orders
-require plugin_dir_path(__FILE__) . 'templates/sales/add-tokens.php';
-
 //To declutter we have moved shortcodes to their associated template files.
 
 require plugin_dir_path(__FILE__) . 'templates/cvr-licence-fees.php';
-// Passport/births-deaths/citizen-status fee tables MIGRATED to
-// zimpricecheck-tools/civil-registry/ (August 2026) — archived to
-// wp-content/_deprecated/civil-registry-2026-08-24/, removed from here.
-// require plugin_dir_path(__FILE__) . 'templates/passports-explanations.php';
-// Historical rates browsing MIGRATED to zimpricecheck-tools/prices/ (August 2026) —
-// archived to wp-content/_deprecated/rates-2026-08-23/, removed from here.
-// require plugin_dir_path(__FILE__) . 'historical-rates/historical-rates.php';
 require plugin_dir_path(__FILE__) . 'shortcodes/past-rates-banner.php';
 require plugin_dir_path(__FILE__) . 'after-content/whatsapp-channel.php';
-require plugin_dir_path(__FILE__) . 'ads/ads.php';
-
-//Table shortcodes
-
-
-
-//To DO: Debug Block here
-// require plugin_dir_path(__FILE__) . 'blocks/contact-info-block.php';
+// Ad rendering is now owned entirely by the Zimpricecheck Tools ad manager (see plugins/zimpricecheck-tools/ads/).

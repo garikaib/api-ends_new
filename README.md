@@ -1,6 +1,6 @@
 # API Ends Plugin
 
-A comprehensive WordPress plugin for displaying dynamic prices, exchange rates, and other essential data for Zimbabwe, powered by the ZimPriceCheck API.
+A comprehensive WordPress plugin for displaying dynamic prices, exchange rates, and other essential data for Zimbabwe, powered by the Zimpricecheck API.
 
 ## Features
 

@@ -42,3 +42,21 @@ function zp_getCellValue($array, $key)
     }
     return $formattedValue;
 }
+
+/**
+ * Normalize a fine category string: unify unicode/ASCII apostrophes and
+ * collapse repeated whitespace, so category names from the API compare
+ * reliably regardless of quote style.
+ *
+ * @param string $cat Raw category string.
+ *
+ * @return string Normalized category string.
+ */
+if ( ! function_exists( 'zp_normalize_fine_category' ) ) {
+	function zp_normalize_fine_category($cat)
+	{
+	    $cleaned = preg_replace('/[\x{2019}\x{2018}\']/u', "'", $cat);
+	    $cleaned = preg_replace('/\s+/', ' ', $cleaned);
+	    return trim($cleaned);
+	}
+}
